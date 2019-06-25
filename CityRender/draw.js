@@ -81,50 +81,66 @@
     utils.get_json(assetDir + 'roads/road04.json', function(loadedModel){roadModel[2] = loadedModel;});
     
     for (let i=0; i<world.length; i++) {
-        roadVertices[i] = roadModel[i].meshes[0].vertices;
-        roadIndices[i] = [].concat.apply([], roadModel[i].meshes[0].faces);
-        roadTextCoords[i] = roadModel[i].meshes[0].texturecoords[0];
-        console.log(i)
+        roadVertices[i] = new Array();
+        roadIndices[i] = new Array();
+        roadTextCoords[i] = new Array();
+        for(let j=0; j<roadModel[i].meshes.length; j++){
+            console.log(i,j);
+            roadVertices[i][j] = roadModel[i].meshes[j].vertices;
+            roadIndices[i][j] = [].concat.apply([], roadModel[i].meshes[j].faces);
+            if(roadModel[i].meshes[j].hasOwnProperty("texturecoords"))
+                roadTextCoords[i][j] = roadModel[i].meshes[j].texturecoords[0];
+        }
+
     }
     
 
     var perspectiveMatrix = utils.MakePerspective(60, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
+    var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+    var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
+    var matrixLocation = gl.getUniformLocation(program, "matrix");
+    var textLocation = gl.getUniformLocation(program, "u_texture");
 
     for(let i=0; i<world.length; i++){
+        meshMatIndex[i] = new Array();
+        UVFileNamePropertyIndex[i] = new Array();
+        diffuseColorPropertyIndex[i] = new Array();
+        specularColorPropertyIndex[i] = new Array();
+        imageName[i] = new Array();
+        texture[i] = new Array();
+        image[i] = new Array();
+        for(let j=0; j<roadModel[i].meshes.length; j++) {
 
-        meshMatIndex[i] = roadModel[i].meshes[0].materialindex;
+                meshMatIndex[i][j] = roadModel[i].meshes[j].materialindex;
 
-        for (let n = 0; n < roadModel[i].materials[meshMatIndex[i]].properties.length; n++){
-            if(roadModel[i].materials[meshMatIndex[i]].properties[n].key == "$tex.file") UVFileNamePropertyIndex[i] = n;
-            if(roadModel[i].materials[meshMatIndex[i]].properties[n].key == "$clr.diffuse") diffuseColorPropertyIndex[i] = n;
-            if(roadModel[i].materials[meshMatIndex[i]].properties[n].key == "$clr.specular") specularColorPropertyIndex[i] = n;
+                for (let n = 0; n < roadModel[i].materials[meshMatIndex[i][j]].properties.length; n++) {
+                    if (roadModel[i].materials[meshMatIndex[i][j]].properties[n].key == "$tex.file") UVFileNamePropertyIndex[i][j] = n;
+                    if (roadModel[i].materials[meshMatIndex[i][j]].properties[n].key == "$clr.diffuse") diffuseColorPropertyIndex[i][j] = n;
+                    if (roadModel[i].materials[meshMatIndex[i][j]].properties[n].key == "$clr.specular") specularColorPropertyIndex[i][j] = n;
+                }
+
+                if (roadModel[i].materials[meshMatIndex[i][j]].hasOwnProperty([UVFileNamePropertyIndex[i][j]])) {
+                    imageName[i][j] = roadModel[i].materials[meshMatIndex[i][j]].properties[UVFileNamePropertyIndex[i][j]].value;
+                    texture[i][j] = gl.createTexture();
+                    gl.bindTexture(gl.TEXTURE_2D, texture[i][j]);
+                    image[i][j] = new Image();
+                    image[i][j].obj = i;
+                    image[i][j].mesh = j;
+
+                    requestCORSIfNotSameOrigin(image[i][j], assetDir + "roads/" + imageName[i][j]);
+                    image[i][j].src = assetDir + "roads/" + imageName[i][j];
+
+                    image[i][j].onload = function () {
+                        gl.bindTexture(gl.TEXTURE_2D, texture[this.obj][this.mesh]);
+                        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                        gl.generateMipmap(gl.TEXTURE_2D);
+                    };
+                }
+
         }
-
-        imageName[i] = roadModel[i].materials[meshMatIndex[i]].properties[UVFileNamePropertyIndex[i]].value;
-
-        
-        texture[i] = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture[i]);
-
-        image[i] = new Image();
-        image[i].num = i;
-
-        requestCORSIfNotSameOrigin(image[i], assetDir + "roads/" + imageName);
-        image[i].src = assetDir + "roads/" + imageName[i];
-
-        var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-        var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
-        var matrixLocation = gl.getUniformLocation(program, "matrix");
-        var textLocation = gl.getUniformLocation(program, "u_texture");
-
-        image[i].onload = function() {
-            gl.bindTexture(gl.TEXTURE_2D, texture[this.num]);
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.generateMipmap(gl.TEXTURE_2D);
-        };
 
     }
 
@@ -152,35 +168,38 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
         
-        for (let j=0; j<world.length; j++) {
+        for (let i=0; i<world.length; i++) {
+            for (let j = 0; j < roadModel[i].meshes.length; j++) {
 
-            let viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[j]);
-            let projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
-    
-            
-            gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[j]), gl.STATIC_DRAW);
-            gl.enableVertexAttribArray(positionAttributeLocation);
-            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+                let viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[i]);
+                let projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
 
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[j]), gl.STATIC_DRAW);
-            gl.enableVertexAttribArray(uvAttributeLocation);
-            gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+                gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[j]), gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[i][j]), gl.STATIC_DRAW);
+                gl.enableVertexAttribArray(positionAttributeLocation);
+                gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-            gl.activeTexture(gl.TEXTURE0);
-            gl.uniform1i(textLocation, texture[j]);
 
-            gl.drawElements(gl.TRIANGLES, roadIndices[j].length, gl.UNSIGNED_SHORT, 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[i][j]), gl.STATIC_DRAW);
+                gl.enableVertexAttribArray(uvAttributeLocation);
+                gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[i][j]), gl.STATIC_DRAW);
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.uniform1i(textLocation, texture[i][j]);
+
+                gl.drawElements(gl.TRIANGLES, roadIndices[i][j].length, gl.UNSIGNED_SHORT, 0);
+            }
         }
 
         window.requestAnimationFrame(drawScene);
+
 
     }
 }
