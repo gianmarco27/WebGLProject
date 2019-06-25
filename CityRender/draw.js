@@ -1,6 +1,6 @@
     //Camera Parameters
     var relativeCameraVector = [0,3];
-    var relativeCameraZ = 0.1;
+    var relativeCameraZ = 0.18;
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
     var cameraDelta = 0.01;
@@ -154,8 +154,8 @@
         
         for (let j=0; j<world.length; j++) {
 
-            var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[j]);
-            var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
+            let viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[j]);
+            let projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
     
             
             gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
@@ -235,13 +235,6 @@ function initInteraction(){
           cameraSpeedsVector[1] = -cameraDelta;
 
       }
-      //Z-position
-      if (e.keyCode == 107) { // Add
-        relativeCameraZ+=cameraDelta;
-      }
-      if (e.keyCode == 109) { // Subtract
-        relativeCameraZ-=cameraDelta;
-      }
 
       if (e.keyCode == 65) {  // a
         //cameraAngle-=cameraDelta*10.0;
@@ -286,14 +279,6 @@ function initInteraction(){
           cameraSpeedsVector[1] = 0;
 
       }
-      //Z-position
-      if (e.keyCode == 107) { // Add
-        relativeCameraZ+=cameraDelta;
-      }
-      if (e.keyCode == 109) { // Subtract
-        relativeCameraZ-=cameraDelta;
-      }
-
       if (e.keyCode == 65) {  // a
         //cameraAngle-=cameraDelta*10.0;
           cameraAngleSpeed = 0;
