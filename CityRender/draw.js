@@ -79,13 +79,12 @@
     utils.get_json(assetDir + 'roads/road03.json', function(loadedModel){roadModel[0] = loadedModel;});
     utils.get_json(assetDir + 'roads/road01.json', function(loadedModel){roadModel[1] = loadedModel;});
     utils.get_json(assetDir + 'roads/road04.json', function(loadedModel){roadModel[2] = loadedModel;});
-    
+
     for (let i=0; i<world.length; i++) {
         roadVertices[i] = new Array();
         roadIndices[i] = new Array();
         roadTextCoords[i] = new Array();
         for(let j=0; j<roadModel[i].meshes.length; j++){
-            console.log(i,j);
             roadVertices[i][j] = roadModel[i].meshes[j].vertices;
             roadIndices[i][j] = [].concat.apply([], roadModel[i].meshes[j].faces);
             if(roadModel[i].meshes[j].hasOwnProperty("texturecoords"))
@@ -144,9 +143,9 @@
 
     }
 
-    var positionBuffer = gl.createBuffer();
-    var uvBuffer = gl.createBuffer();
-    var indexBuffer = gl.createBuffer();
+    var positionBuffer;
+    var uvBuffer;
+    var indexBuffer;
     initInteraction();
     drawScene();
 
@@ -167,8 +166,11 @@
         gl.clearColor(0.85, 0.85, 0.85, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
+
+
         
         for (let i=0; i<world.length; i++) {
+
             for (let j = 0; j < roadModel[i].meshes.length; j++) {
 
                 let viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[i]);
@@ -177,22 +179,26 @@
 
                 gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 
+                positionBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[i][j]), gl.STATIC_DRAW);
                 gl.enableVertexAttribArray(positionAttributeLocation);
                 gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-
+                uvBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[i][j]), gl.STATIC_DRAW);
                 gl.enableVertexAttribArray(uvAttributeLocation);
                 gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
+
+                indexBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[i][j]), gl.STATIC_DRAW);
 
                 gl.activeTexture(gl.TEXTURE0);
                 gl.uniform1i(textLocation, texture[i][j]);
+
 
                 gl.drawElements(gl.TRIANGLES, roadIndices[i][j].length, gl.UNSIGNED_SHORT, 0);
             }
