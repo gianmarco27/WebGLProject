@@ -10,9 +10,6 @@
     var cameraElevationSpeed = 0.0;
 
 
-
-
-
     function main() {
 
     var shaderDir = new URL(origin) + "CityRender/shaders/";
@@ -33,7 +30,7 @@
     var roadVertices = new Array();
     var roadIndices = new Array();
     var roadTextCoords = new Array();
-    var meshMatIndex = new Array();
+    var modelMeshMatIndex = new Array();
 
     var imageName = new Array();
 
@@ -100,47 +97,53 @@
     var matrixLocation = gl.getUniformLocation(program, "matrix");
     var textLocation = gl.getUniformLocation(program, "u_texture");
 
-    for(let i=0; i<world.length; i++){
-        meshMatIndex[i] = new Array();
-        UVFileNamePropertyIndex[i] = new Array();
-        diffuseColorPropertyIndex[i] = new Array();
-        specularColorPropertyIndex[i] = new Array();
-        imageName[i] = new Array();
-        texture[i] = new Array();
-        image[i] = new Array();
-        for(let j=0; j<roadModel[i].meshes.length; j++) {
+    for(let modelIndex = 0; modelIndex < world.length; modelIndex ++){
+        modelMeshMatIndex[modelIndex] = new Array();
+        UVFileNamePropertyIndex[modelIndex] = new Array();
+        diffuseColorPropertyIndex[modelIndex] = new Array();
+        specularColorPropertyIndex[modelIndex] = new Array();
+        imageName[modelIndex] = new Array();
+        texture[modelIndex] = new Array();
+        image[modelIndex] = new Array();
+        for(let meshIndex = 0; meshIndex < roadModel[modelIndex].meshes.length; meshIndex ++) {
 
-                meshMatIndex[i][j] = roadModel[i].meshes[j].materialindex;
+                modelMeshMatIndex[modelIndex][meshIndex] = roadModel[modelIndex].meshes[meshIndex].materialindex;
 
-                for (let n = 0; n < roadModel[i].materials[meshMatIndex[i][j]].properties.length; n++) {
-                    if (roadModel[i].materials[meshMatIndex[i][j]].properties[n].key == "$tex.file") UVFileNamePropertyIndex[i][j] = n;
-                    if (roadModel[i].materials[meshMatIndex[i][j]].properties[n].key == "$clr.diffuse") diffuseColorPropertyIndex[i][j] = n;
-                    if (roadModel[i].materials[meshMatIndex[i][j]].properties[n].key == "$clr.specular") specularColorPropertyIndex[i][j] = n;
+                for (let n = 0; n < roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties.length; n++) {
+                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$tex.file") 
+                        UVFileNamePropertyIndex[modelIndex][meshIndex] = n;
+                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$clr.diffuse") 
+                        diffuseColorPropertyIndex[modelIndex][meshIndex] = n;
+                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$clr.specular") 
+                        specularColorPropertyIndex[modelIndex][meshIndex] = n;
                 }
 
-                if (roadModel[i].materials[meshMatIndex[i][j]].hasOwnProperty([UVFileNamePropertyIndex[i][j]])) {
-                    imageName[i][j] = roadModel[i].materials[meshMatIndex[i][j]].properties[UVFileNamePropertyIndex[i][j]].value;
-                    texture[i][j] = gl.createTexture();
-                    gl.bindTexture(gl.TEXTURE_2D, texture[i][j]);
-                    image[i][j] = new Image();
-                    image[i][j].obj = i;
-                    image[i][j].mesh = j;
+                if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties
+                                            .hasOwnProperty(UVFileNamePropertyIndex[modelIndex][meshIndex])){
+                    imageName[modelIndex][meshIndex] = roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]]
+                                                                        .properties[UVFileNamePropertyIndex[modelIndex][meshIndex]].value;
+                    texture[modelIndex][meshIndex] = gl.createTexture();
+                    gl.bindTexture(gl.TEXTURE_2D, texture[modelIndex][meshIndex]);
+                    image[modelIndex][meshIndex] = new Image();
+                    image[modelIndex][meshIndex].obj = modelIndex;
+                    image[modelIndex][meshIndex].mesh = meshIndex;
+                    console.log(image,modelIndex);
+                    requestCORSIfNotSameOrigin(image[modelIndex][meshIndex], assetDir + "roads/" + imageName[modelIndex][meshIndex]);
+                    image[modelIndex][meshIndex].src = assetDir + "roads/" + imageName[modelIndex][meshIndex];
 
-                    requestCORSIfNotSameOrigin(image[i][j], assetDir + "roads/" + imageName[i][j]);
-                    image[i][j].src = assetDir + "roads/" + imageName[i][j];
-
-                    image[i][j].onload = function () {
+                    //TODO make every texture binded to it's own mesh
+                    image[modelIndex][meshIndex].onload = function () {
                         gl.bindTexture(gl.TEXTURE_2D, texture[this.obj][this.mesh]);
                         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
                         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this);
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                        gl.generateMipmap(gl.TEXTURE_2D);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
                     };
                 }
 
         }
-
     }
 
     var positionBuffer;
@@ -169,38 +172,36 @@
 
 
         
-        for (let i=0; i<world.length; i++) {
+        for (let modelIndex = 0; modelIndex < world.length; modelIndex++) {
+            let currentModel = modelIndex;
+            for (let meshIndex = 0; meshIndex < roadModel[currentModel].meshes.length; meshIndex++) {
 
-            for (let j = 0; j < roadModel[i].meshes.length; j++) {
-
-                let viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[i]);
+                let viewWorldMatrix = utils.multiplyMatrices(viewMatrix, world[currentModel]);
                 let projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
 
 
                 gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 
-                positionBuffer = gl.createBuffer();
+                let positionBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[i][j]), gl.STATIC_DRAW);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[currentModel][meshIndex]), gl.STATIC_DRAW);
                 gl.enableVertexAttribArray(positionAttributeLocation);
                 gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-                uvBuffer = gl.createBuffer();
+                let uvBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[i][j]), gl.STATIC_DRAW);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[currentModel][meshIndex]), gl.STATIC_DRAW);
                 gl.enableVertexAttribArray(uvAttributeLocation);
                 gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
 
-                indexBuffer = gl.createBuffer();
+                let indexBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[i][j]), gl.STATIC_DRAW);
-
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[currentModel][meshIndex]), gl.STATIC_DRAW);
                 gl.activeTexture(gl.TEXTURE0);
-                gl.uniform1i(textLocation, texture[i][j]);
+                gl.uniform1i(textLocation, texture[currentModel][meshIndex]);
 
-
-                gl.drawElements(gl.TRIANGLES, roadIndices[i][j].length, gl.UNSIGNED_SHORT, 0);
+                gl.drawElements(gl.TRIANGLES, roadIndices[currentModel][meshIndex].length, gl.UNSIGNED_SHORT, 0);
             }
         }
 
