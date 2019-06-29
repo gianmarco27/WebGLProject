@@ -89,7 +89,6 @@
         }
 
     }
-    
 
     var perspectiveMatrix = utils.MakePerspective(60, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
@@ -106,6 +105,9 @@
         texture[modelIndex] = new Array();
         image[modelIndex] = new Array();
         for(let meshIndex = 0; meshIndex < roadModel[modelIndex].meshes.length; meshIndex ++) {
+
+            
+                modelSizeCalculator(roadModel[modelIndex]);
 
                 modelMeshMatIndex[modelIndex][meshIndex] = roadModel[modelIndex].meshes[meshIndex].materialindex;
 
@@ -127,7 +129,6 @@
                     image[modelIndex][meshIndex] = new Image();
                     image[modelIndex][meshIndex].obj = modelIndex;
                     image[modelIndex][meshIndex].mesh = meshIndex;
-                    console.log(image,modelIndex);
                     requestCORSIfNotSameOrigin(image[modelIndex][meshIndex], assetDir + "roads/" + imageName[modelIndex][meshIndex]);
                     image[modelIndex][meshIndex].src = assetDir + "roads/" + imageName[modelIndex][meshIndex];
 
@@ -336,6 +337,37 @@ function requestCORSIfNotSameOrigin(img, url) {
         img.crossOrigin = "";
     }
 }
+
+function modelSizeCalculator(model){
+    let minX = 100;
+    let minY = 100;
+    let maxX = -100;
+    let maxY = -100;
+    for(let i = 0; i < model.meshes.length; i++){
+        for(let j = 0; j < model.meshes[i].vertices.length; j++){
+            if(minX > model.meshes[i].vertices[j])
+                minX = model.meshes[i].vertices[j];
+            if(maxX < model.meshes[i].vertices[j])
+                maxX = model.meshes[i].vertices[j];
+            j++;
+            if(minY > model.meshes[i].vertices[j])
+                minY = model.meshes[i].vertices[j];
+            if(maxY < model.meshes[i].vertices[j])
+                maxY = model.meshes[i].vertices[j];
+        }
+    }
+    console.log((minX+maxX)/2,(minY+maxY)/2);
+    let offsetX = (minX+maxX)/2;
+    let offsetY = (minY+maxY)/2;
+    //for(let i = 0; i < model.meshes.length; i++){
+    //    for(let j = 0; j < model.meshes[i].vertices.length; j++){
+    //        model.meshes[i].vertices[j] += offsetX;
+    //        j++
+    //        model.meshes[i].vertices[j] += offsetY;
+    //        }
+    //}
+}
+
 
 main();
 
