@@ -140,6 +140,7 @@
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                        gl.bindTexture(gl.TEXTURE_2D, null);
                     };
                 }
 
@@ -188,6 +189,9 @@
                 gl.enableVertexAttribArray(positionAttributeLocation);
                 gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, texture[modelIndex][meshIndex]);
+
                 let uvBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[currentModel][meshIndex]), gl.STATIC_DRAW);
@@ -198,8 +202,8 @@
                 let indexBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[currentModel][meshIndex]), gl.STATIC_DRAW);
-                gl.activeTexture(gl.TEXTURE0);
                 gl.uniform1i(textLocation, texture[currentModel][meshIndex]);
+
 
                 gl.drawElements(gl.TRIANGLES, roadIndices[currentModel][meshIndex].length, gl.UNSIGNED_SHORT, 0);
             }
