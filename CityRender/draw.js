@@ -1,6 +1,6 @@
     //Camera Parameters
     var relativeCameraVector = [0,3];
-    var relativeCameraZ = 0.18;
+    var relativeCameraZ = 0.2;
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
     var cameraDelta = 0.01;
@@ -40,9 +40,9 @@
 
     var world = new Array();
 
-    world[0] = utils.MakeWorld(0.0, 2.0, 0.0, modelRx, modelRy, modelRz, 1.0);
-    world[1] = utils.MakeWorld(-0.05, 5.4, 0.0, modelRx, modelRy, modelRz, 1.0);
-    world[2] = utils.MakeWorld(0.0, 7.7, 0.0, modelRx, modelRy, modelRz, 1.0);
+    world[0] = utils.MakeWorld(0.0, 1.145, 0.0, modelRx, modelRy, modelRz, 1.0);
+    world[1] = utils.MakeWorld(0.0, 3.43, 0.0, modelRx, modelRy, modelRz, 1.0);
+    world[2] = utils.MakeWorld(0.0, 5.72, 0.0, modelRx, modelRy, modelRz, 1.0);
 
     
     var UVFileNamePropertyIndex = new Array();
@@ -74,8 +74,8 @@
     gl.useProgram(program);
 
     utils.get_json(assetDir + 'roads/road03.json', function(loadedModel){roadModel[0] = loadedModel;});
-    utils.get_json(assetDir + 'roads/road01.json', function(loadedModel){roadModel[1] = loadedModel;});
-    utils.get_json(assetDir + 'roads/road04.json', function(loadedModel){roadModel[2] = loadedModel;});
+    utils.get_json(assetDir + 'roads/road04.json', function(loadedModel){roadModel[1] = loadedModel;});
+    utils.get_json(assetDir + 'roads/road01.json', function(loadedModel){roadModel[2] = loadedModel;});
 
     for (let i=0; i<world.length; i++) {
         roadVertices[i] = new Array();
@@ -104,10 +104,11 @@
         imageName[modelIndex] = new Array();
         texture[modelIndex] = new Array();
         image[modelIndex] = new Array();
+        
+        
+        modelSizeCalculator(roadVertices[modelIndex]);
+        
         for(let meshIndex = 0; meshIndex < roadModel[modelIndex].meshes.length; meshIndex ++) {
-
-            
-                modelSizeCalculator(roadModel[modelIndex]);
 
                 modelMeshMatIndex[modelIndex][meshIndex] = roadModel[modelIndex].meshes[meshIndex].materialindex;
 
@@ -132,14 +133,10 @@
                     requestCORSIfNotSameOrigin(image[modelIndex][meshIndex], assetDir + "roads/" + imageName[modelIndex][meshIndex]);
                     image[modelIndex][meshIndex].src = assetDir + "roads/" + imageName[modelIndex][meshIndex];
 
-                    //TODO make every texture binded to it's own mesh
                     image[modelIndex][meshIndex].onload = function () {
                         gl.bindTexture(gl.TEXTURE_2D, texture[this.obj][this.mesh]);
                         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
                         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this);
-                        //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                        //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                        //removed causing texture mismatching
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
                         gl.bindTexture(gl.TEXTURE_2D, null);
@@ -340,34 +337,35 @@ function requestCORSIfNotSameOrigin(img, url) {
 
 function modelSizeCalculator(model){
     let minX = 100;
-    let minY = 100;
+    let minZ = 100;
     let maxX = -100;
-    let maxY = -100;
-    for(let i = 0; i < model.meshes.length; i++){
-        for(let j = 0; j < model.meshes[i].vertices.length; j++){
-            if(minX > model.meshes[i].vertices[j])
-                minX = model.meshes[i].vertices[j];
-            if(maxX < model.meshes[i].vertices[j])
-                maxX = model.meshes[i].vertices[j];
+    let maxZ = -100;
+    for(let i = 0; i < model.length; i++){
+        for(let j = 0; j < model[i].length; j++){
+            if(minX > model[i][j])
+                minX = model[i][j];
+            if(maxX < model[i][j])
+                maxX = model[i][j];
             j++;
-            if(minY > model.meshes[i].vertices[j])
-                minY = model.meshes[i].vertices[j];
-            if(maxY < model.meshes[i].vertices[j])
-                maxY = model.meshes[i].vertices[j];
+            j++;
+            if(minZ > model[i][j])
+                minZ = model[i][j];
+            if(maxZ < model[i][j])
+                maxZ = model[i][j];
         }
     }
-    console.log((minX+maxX)/2,(minY+maxY)/2);
-    let offsetX = (minX+maxX)/2;
-    let offsetY = (minY+maxY)/2;
-    //for(let i = 0; i < model.meshes.length; i++){
-    //    for(let j = 0; j < model.meshes[i].vertices.length; j++){
-    //        model.meshes[i].vertices[j] += offsetX;
-    //        j++
-    //        model.meshes[i].vertices[j] += offsetY;
-    //        }
-    //}
+    console.log(minX,maxX,minZ,maxZ);
+    let offsetX = -(minX+maxX)/2;
+    let offsetZ = -(minZ+maxZ)/2;
+    for(let i = 0; i < model.length; i++){
+        for(let j = 0; j < model[i].length; j++){
+            model[i][j] += offsetX;
+            j++;
+            j++;
+            model[i][j] += offsetZ;
+            }
+    }
 }
-
 
 main();
 
