@@ -15,9 +15,9 @@ vec3 lightPos= vec3(0.0f,7.0f,10.0f);
 vec3 lightColor = vec3(2.3f,2.1f,2.1f);
 
 
-vec3 objectColor= vec3(0.4f,0.4f,0.4f);
+vec3 objectColor = vec3(0.4f,0.4f,0.4f);
 
-vec3 FragPos= vec3(1.0f,1.0f,1.0f);
+vec3 FragPos = vec3(1.0f,1.0f,1.0f);
 
 
 void main() {
@@ -31,6 +31,6 @@ void main() {
     float diff = dot(norm, lightDir);
     vec3 diffuse = diff * lightColor ;
 
-    vec3 result =  (ambient+ diffuse) * objectColor;
+    vec3 result =  (ambient + diffuse) * objectColor;
     outColor = vec4(result, 1.0) * texture(u_texture, uvFS) ;
 }

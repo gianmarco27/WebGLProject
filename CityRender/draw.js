@@ -44,6 +44,7 @@
     world[0] = utils.MakeWorld(0.0, 1.145, 0.0, modelRx, modelRy, modelRz, 1.0);
     world[1] = utils.MakeWorld(0.0, 3.43, 0.0, modelRx, modelRy, modelRz, 1.0);
     world[2] = utils.MakeWorld(0.0, 5.72, 0.0, modelRx, modelRy, modelRz, 1.0);
+    world[3] = utils.MakeWorld(0.0, 2.72, -0.018, modelRx, modelRy, modelRz, 1.0);
 
 
     var UVFileNamePropertyIndex = new Array();
@@ -77,6 +78,7 @@
     utils.get_json(assetDir + 'roads/road03.json', function(loadedModel){roadModel[0] = loadedModel;});
     utils.get_json(assetDir + 'roads/road04.json', function(loadedModel){roadModel[1] = loadedModel;});
     utils.get_json(assetDir + 'roads/road01.json', function(loadedModel){roadModel[2] = loadedModel;});
+    utils.get_json(assetDir + 'roads/road06.json', function(loadedModel){roadModel[3] = loadedModel;});
 
     for (let i=0; i<world.length; i++) {
         roadVertices[i] = new Array();
