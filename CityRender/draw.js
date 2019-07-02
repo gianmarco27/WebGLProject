@@ -30,6 +30,7 @@
     var roadVertices = new Array();
     var roadIndices = new Array();
     var roadTextCoords = new Array();
+    var roadNormals = new Array();
     var modelMeshMatIndex = new Array();
 
     var imageName = new Array();
@@ -44,7 +45,7 @@
     world[1] = utils.MakeWorld(0.0, 3.43, 0.0, modelRx, modelRy, modelRz, 1.0);
     world[2] = utils.MakeWorld(0.0, 5.72, 0.0, modelRx, modelRy, modelRz, 1.0);
 
-    
+
     var UVFileNamePropertyIndex = new Array();
     var diffuseColorPropertyIndex = new Array();
     var specularColorPropertyIndex = new Array();
@@ -60,7 +61,7 @@
     }
 
     utils.resizeCanvasToDisplaySize(gl.canvas);
-    
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0.85, 0.85, 0.85, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -81,9 +82,11 @@
         roadVertices[i] = new Array();
         roadIndices[i] = new Array();
         roadTextCoords[i] = new Array();
+        roadNormals[i]= new Array();
         for(let j=0; j<roadModel[i].meshes.length; j++){
             roadVertices[i][j] = roadModel[i].meshes[j].vertices;
             roadIndices[i][j] = [].concat.apply([], roadModel[i].meshes[j].faces);
+            roadNormals[i][j] = roadModel[i].meshes[j].normals;
             if(roadModel[i].meshes[j].hasOwnProperty("texturecoords"))
                 roadTextCoords[i][j] = roadModel[i].meshes[j].texturecoords[0];
         }
@@ -92,9 +95,12 @@
 
     var perspectiveMatrix = utils.MakePerspective(60, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+    var normalAttributeLocation = gl.getAttribLocation(program, "a_normal");
     var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
     var matrixLocation = gl.getUniformLocation(program, "matrix");
+    var matrixModelLocation= gl.getUniformLocation(program,"model");
     var textLocation = gl.getUniformLocation(program, "u_texture");
+
 
     for(let modelIndex = 0; modelIndex < world.length; modelIndex ++){
         modelMeshMatIndex[modelIndex] = new Array();
@@ -104,20 +110,20 @@
         imageName[modelIndex] = new Array();
         texture[modelIndex] = new Array();
         image[modelIndex] = new Array();
-        
-        
+
+
         modelSizeCalculator(roadVertices[modelIndex]);
-        
+
         for(let meshIndex = 0; meshIndex < roadModel[modelIndex].meshes.length; meshIndex ++) {
 
                 modelMeshMatIndex[modelIndex][meshIndex] = roadModel[modelIndex].meshes[meshIndex].materialindex;
 
                 for (let n = 0; n < roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties.length; n++) {
-                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$tex.file") 
+                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$tex.file")
                         UVFileNamePropertyIndex[modelIndex][meshIndex] = n;
-                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$clr.diffuse") 
+                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$clr.diffuse")
                         diffuseColorPropertyIndex[modelIndex][meshIndex] = n;
-                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$clr.specular") 
+                    if (roadModel[modelIndex].materials[modelMeshMatIndex[modelIndex][meshIndex]].properties[n].key == "$clr.specular")
                         specularColorPropertyIndex[modelIndex][meshIndex] = n;
                 }
 
@@ -149,29 +155,30 @@
     var positionBuffer;
     var uvBuffer;
     var indexBuffer;
+    var normalBuffer;
     initInteraction();
     drawScene();
 
     function drawScene() {
         // camera speed are set inside keyfunctions
-        
+
         // now we obtain every draw the camera position by computing the matrices with the speed
         cameraAngle += cameraAngleSpeed;
         cameraElevation += cameraElevationSpeed;
-        
+
         relativeCameraVector = math.add(relativeCameraVector,math.multiply(cameraSpeedsVector,makeCustomRotMatrix(cameraAngle)));
-        
+
         //Calculating viewMatrix
         viewMatrix = MakeHorizontalView(relativeCameraVector[0], relativeCameraVector[1], relativeCameraZ, cameraElevation, cameraAngle);
-        
-        
+
+
         utils.resizeCanvasToDisplaySize(gl.canvas);
         gl.clearColor(0.85, 0.85, 0.85, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
 
 
-        
+
         for (let modelIndex = 0; modelIndex < world.length; modelIndex++) {
             let currentModel = modelIndex;
             for (let meshIndex = 0; meshIndex < roadModel[currentModel].meshes.length; meshIndex++) {
@@ -181,6 +188,7 @@
 
 
                 gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
+                gl.uniformMatrix4fv(matrixModelLocation,gl.FALSE, utils.transposeMatrix(world[currentModel]));
 
                 let positionBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -190,6 +198,13 @@
 
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, texture[modelIndex][meshIndex]);
+
+                var normalBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadNormals[currentModel][meshIndex]), gl.STATIC_DRAW);
+                gl.enableVertexAttribArray(normalAttributeLocation);
+                gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
 
                 let uvBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
@@ -217,7 +232,7 @@
 function MakeHorizontalView(cx, cy, cz, elev, ang) {
 	// Creates in {out} a view matrix. The camera is centerd in ({cx}, {cy}, {cz}).
 	// It looks {ang} degrees on Z axis, and {elev} degrees on the x axis.
-		
+
 		let T = [];
 		let Rx = [];
 		let Ry = [];
@@ -240,9 +255,9 @@ function makeCustomRotMatrix(rotAngle){
 }
 
 function initInteraction(){
-   
+
     var keyFunctionDown =function(e) {
-      
+
       if (e.keyCode == 37) {  // Left arrow
         //cx-=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([-cameraDelta,0],makeCustomRotMatrix(cameraAngle)));
@@ -252,7 +267,7 @@ function initInteraction(){
         //cx+=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([cameraDelta,0],makeCustomRotMatrix(cameraAngle)));
           cameraSpeedsVector[0] = cameraDelta;
-      } 
+      }
       if (e.keyCode == 38) {  // Up arrow
         //cz-=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([0,cameraDelta],makeCustomRotMatrix(cameraAngle)));
@@ -272,21 +287,21 @@ function initInteraction(){
       if (e.keyCode == 68) {  // d
         //cameraAngle+=cameraDelta*10.0;
           cameraAngleSpeed = cameraDelta*100.0;
-      } 
+      }
       if (e.keyCode == 87) {  // w
         //cameraElevation+=cameraDelta*10.0;
-          cameraElevationSpeed = cameraDelta*100.0;      
+          cameraElevationSpeed = cameraDelta*100.0;
       }
       if (e.keyCode == 83) {  // s
         //cameraElevation-=cameraDelta*10.0;
-          cameraElevationSpeed = -cameraDelta*100.0;      
+          cameraElevationSpeed = -cameraDelta*100.0;
       }
     }
     //'window' is a JavaScript object (if "canvas", it will not work)
     window.addEventListener("keydown", keyFunctionDown, false);
-    
+
     var keyFunctionUp =function(e) {
-      
+
       if (e.keyCode == 37) {  // Left arrow
         //cx-=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([-cameraDelta,0],makeCustomRotMatrix(cameraAngle)));
@@ -296,7 +311,7 @@ function initInteraction(){
         //cx+=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([cameraDelta,0],makeCustomRotMatrix(cameraAngle)));
           cameraSpeedsVector[0] = 0;
-      } 
+      }
       if (e.keyCode == 38) {  // Up arrow
         //cz-=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([0,cameraDelta],makeCustomRotMatrix(cameraAngle)));
@@ -315,14 +330,14 @@ function initInteraction(){
       if (e.keyCode == 68) {  // d
         //cameraAngle+=cameraDelta*10.0;
           cameraAngleSpeed = 0;
-      } 
+      }
       if (e.keyCode == 87) {  // w
         //cameraElevation+=cameraDelta*10.0;
-          cameraElevationSpeed = 0;      
+          cameraElevationSpeed = 0;
       }
       if (e.keyCode == 83) {  // s
         //cameraElevation-=cameraDelta*10.0;
-          cameraElevationSpeed = 0;      
+          cameraElevationSpeed = 0;
       }
     }
     //'window' is a JavaScript object (if "canvas", it will not work)
@@ -368,4 +383,3 @@ function modelSizeCalculator(model){
 }
 
 main();
-
