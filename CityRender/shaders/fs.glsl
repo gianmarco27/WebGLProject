@@ -10,11 +10,8 @@ out vec4 outColor;
 uniform sampler2D u_texture;
 
 
-//vec3 lightPos= vec3(100.0f,7.0f,10.0f);
 vec3 lightColor = vec3(2.0f,2.0f,2.1f);
 vec3 objectColor = vec3(1.0f,1.0f,1.0f);
-//vec3 FragPos = vec3(1.0f,1.0f,1.0f);
-
 
 
 //distance = 13
