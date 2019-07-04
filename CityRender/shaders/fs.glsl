@@ -5,13 +5,17 @@ precision mediump float;
 
 in vec2 uvFS;
 in vec3 Normal;
-in vec3 lightDir;
+in vec3 FragPos;
+
 out vec4 outColor;
 uniform sampler2D u_texture;
 
 
 vec3 lightColor = vec3(2.0f,2.0f,2.1f);
 vec3 objectColor = vec3(1.0f,1.0f,1.0f);
+vec3 lightDir;
+
+vec3 lightPos = vec3(0,4,1);
 
 
 //distance = 13
@@ -25,6 +29,7 @@ void main() {
     float ambientStrength = 0.7;
     vec3 ambient = ambientStrength * lightColor;
     vec3 norm = normalize(Normal);
+    lightDir = lightPos - FragPos;
     vec3 lightDirNorm = normalize(lightDir);
     float diff = max(dot(norm, lightDirNorm),0.0);
     vec3 diffuse = diff * lightColor ;
