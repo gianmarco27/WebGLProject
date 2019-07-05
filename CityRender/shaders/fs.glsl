@@ -18,8 +18,8 @@ vec3 objectColor = vec3(1.0f,1.0f,1.0f);
 vec3 lightDir;
 
 // Spotlight
-vec3 lightPosSpot1 = vec3(0.1,0,0.0);
-vec3 lightPosSpot2 = vec3(-0.1,0,0.0);
+vec3 lightPosSpot1 = vec3(0.2,0,0.0);
+vec3 lightPosSpot2 = vec3(-0.2,0,0.0);
 
 //Point Light
 vec3 lightPos= vec3(0,1,1);
@@ -33,7 +33,7 @@ float quadratic = 0.44;
 vec4 calculateSpotLight(in vec3 lightVec, in vec3 normalVec){
   
   vec3 spotDirection = vec3(0.0,0.0,1.0);
-  float cutOffAngle = cos(radians(10.0));
+  float cutOffAngle = cos(radians(20.0));
   
   vec4 color = vec4(1.0,1.0,0.7,1.0);
   float SpotFac = dot(-lightVec,spotDirection);
