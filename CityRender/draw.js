@@ -102,6 +102,7 @@
     var matrixLocation = gl.getUniformLocation(program, "matrix");
     var matrixModelLocation= gl.getUniformLocation(program,"model");
     var textLocation = gl.getUniformLocation(program, "u_texture");
+    var matrixViewWorldLocation = gl.getUniformLocation(program, "viewWorld");
 
 
     for(let modelIndex = 0; modelIndex < world.length; modelIndex ++){
@@ -191,6 +192,8 @@
 
                 gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
                 gl.uniformMatrix4fv(matrixModelLocation,gl.FALSE, utils.transposeMatrix(world[currentModel]));
+                gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewWorldMatrix));
+
 
                 let positionBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
