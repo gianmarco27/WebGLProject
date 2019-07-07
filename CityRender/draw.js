@@ -98,10 +98,19 @@
     var perspectiveMatrix = utils.MakePerspective(60, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
     var normalAttributeLocation = gl.getAttribLocation(program, "a_normal");
+        
+    var cameraPosUniformLocation = gl.getUniformLocation(program, "CameraPos");
+    var angleLocation = gl.getUniformLocation(program, "angle");
+
+
+
+
+        
     var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
     var matrixLocation = gl.getUniformLocation(program, "matrix");
     var matrixWorldLocation= gl.getUniformLocation(program,"world");
     var textLocation = gl.getUniformLocation(program, "u_texture");
+    var matrixViewLocation = gl.getUniformLocation(program, "view");
     var matrixViewWorldLocation = gl.getUniformLocation(program, "viewWorld");
 
 
@@ -173,6 +182,7 @@
 
         //Calculating viewMatrix
         viewMatrix = MakeHorizontalView(relativeCameraVector[0], relativeCameraVector[1], relativeCameraZ, cameraElevation, cameraAngle);
+        
 
 
         utils.resizeCanvasToDisplaySize(gl.canvas);
@@ -192,7 +202,16 @@
 
                 gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
                 gl.uniformMatrix4fv(matrixWorldLocation,gl.FALSE, utils.transposeMatrix(world[currentModel]));
+                gl.uniformMatrix4fv(matrixViewLocation,gl.FALSE, utils.transposeMatrix(viewMatrix));
                 gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewWorldMatrix));
+                
+                    
+            
+                gl.uniform3fv(cameraPosUniformLocation, new Array(relativeCameraVector[0],relativeCameraVector[1],relativeCameraZ));
+                
+                
+                gl.uniform3fv(angleLocation, new Array(cameraAngle,0.0,0.0)); //TODO
+              
 
 
                 let positionBuffer = gl.createBuffer();
@@ -200,11 +219,12 @@
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[currentModel][meshIndex]), gl.STATIC_DRAW);
                 gl.enableVertexAttribArray(positionAttributeLocation);
                 gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+                
 
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, texture[modelIndex][meshIndex]);
 
-                var normalBuffer = gl.createBuffer();
+                let normalBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadNormals[currentModel][meshIndex]), gl.STATIC_DRAW);
                 gl.enableVertexAttribArray(normalAttributeLocation);
@@ -250,7 +270,7 @@ function MakeHorizontalView(cx, cy, cz, elev, ang) {
 
 		tmp = utils.multiplyMatrices(Ry, T);
 		out = utils.multiplyMatrices(Rx, tmp);
-
+    
 		return out;
 	}
 
