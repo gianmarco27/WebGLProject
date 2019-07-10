@@ -1,0 +1,113 @@
+# Blender MTL File: 'None'
+# Material Count: 10
+
+newmtl Brick_Pavers_Modular
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Brick_Pavers_Modular.jpg
+
+newmtl Brick_Tumbled
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Brick_Tumbled.jpg
+
+newmtl Fencing_Mesh_Blue
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Fencing_Mesh_Blue.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Fencing_Mesh_Blue.png
+
+newmtl Fencing_Metal_Straight
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Fencing_Metal_Straight.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Fencing_Metal_Straight.png
+
+newmtl Groundcover_RiverRock_4inch
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Groundcover_RiverRock_4inch.jpg
+
+newmtl Roofing_Shingles_Variable
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Roofing_Shingles_Variable.jpg
+
+newmtl Stone_Flagstone_Ashlar
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Stone_Flagstone_Ashlar.jpg
+
+newmtl Tile_Mosaic_Multi
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Tile_Mosaic_Multi.jpg
+
+newmtl Vegetation_Juniper2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building2/model/Vegetation_Juniper2.jpg
+
+newmtl material
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2

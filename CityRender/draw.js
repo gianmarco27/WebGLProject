@@ -11,7 +11,7 @@
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
     var cameraDelta = 0.01;
-
+    var speedFactor = 2;
     var cameraSpeedsVector = [0.0,0.0];
     var cameraAngleSpeed = 0.0;
     var cameraElevationSpeed = 0.0;
@@ -120,7 +120,7 @@ function main() {
              if(detailMap[MapI][MapJ].direction == "E" || detailMap[MapI][MapJ].direction == "W"){
                  modelRx = 90.0;
              } else modelRx = 0.0;
-            } else if(Map[MapI][MapJ] > 1){
+            } else if(Map[MapI][MapJ] > 1 && detailMap[MapI][MapJ].rotation != null){
                 modelRx = detailMap[MapI][MapJ].rotation;
             }
             
@@ -302,22 +302,22 @@ function initInteraction(){
       if (e.keyCode == 37) {  // Left arrow
         //cx-=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([-cameraDelta,0],makeCustomRotMatrix(cameraAngle)));
-          cameraSpeedsVector[0] = -cameraDelta;
+          cameraSpeedsVector[0] = -speedFactor*cameraDelta;
       }
       if (e.keyCode == 39) {  // Right arrow
         //cx+=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([cameraDelta,0],makeCustomRotMatrix(cameraAngle)));
-          cameraSpeedsVector[0] = cameraDelta;
+          cameraSpeedsVector[0] = speedFactor*cameraDelta;
       }
       if (e.keyCode == 38) {  // Up arrow
         //cz-=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([0,cameraDelta],makeCustomRotMatrix(cameraAngle)));
-          cameraSpeedsVector[1] = cameraDelta;
+          cameraSpeedsVector[1] = speedFactor*cameraDelta;
       }
       if (e.keyCode == 40) {  // Down arrow
         //cz+=cameraDelta;
         //relativeCameraVector = math.add(relativeCameraVector,math.multiply([0,-cameraDelta],makeCustomRotMatrix(cameraAngle)));
-          cameraSpeedsVector[1] = -cameraDelta;
+          cameraSpeedsVector[1] = -speedFactor*cameraDelta;
 
       }
 

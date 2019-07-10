@@ -1,0 +1,48 @@
+# Blender MTL File: 'None'
+# Material Count: 4
+
+newmtl corporate3
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building1/model/corporate3.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/Building1/model/corporate3.png
+
+newmtl dt_scyscrap_door2noCulling
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building1/model/dt_scyscrap_door2noCulling.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/Building1/model/dt_scyscrap_door2noCulling.png
+
+newmtl roof11L256noCulling
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building1/model/roof11L256noCulling.png
+
+newmtl wallwindblank_256noCulling
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/Building1/model/wallwindblank_256noCulling.png

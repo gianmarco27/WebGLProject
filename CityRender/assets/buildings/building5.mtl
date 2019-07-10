@@ -1,0 +1,389 @@
+# Blender MTL File: 'None'
+# Material Count: 36
+
+newmtl Cladding_Board_Batten_Siding
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Cladding_Board_Batten_Siding.jpg
+
+newmtl Color_001
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.886275 0.886275 0.886275
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_002
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.776471 0.776471 0.776471
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_003
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.666667 0.666667 0.666667
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_004
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.556863 0.556863 0.556863
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_006
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.337255 0.337255 0.337255
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_007
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.227451 0.227451 0.227451
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_008
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.117647 0.117647 0.117647
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_009
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Color_A12
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.600000 0.117647 0.117647
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Metal_Steel_Textured_White
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Metal_Steel_Textured_White.jpg
+
+newmtl Stone_Brushed_Khaki
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Stone_Brushed_Khaki.jpg
+
+newmtl Stone_Granite_Coffee
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Stone_Granite_Coffee.jpg
+
+newmtl Stone_Masonry_Multi
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Stone_Masonry_Multi.jpg
+
+newmtl Tile_Hexagon_White
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Tile_Hexagon_White.jpg
+
+newmtl Translucent_Glass_Gray
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.501961 0.501961 0.501961
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.498039
+illum 2
+
+newmtl Translucent_Glass_Sky_Reflection
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Translucent_Glass_Sky_Reflection.jpg
+
+newmtl Translucent_Resin_Crush_Gray
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Translucent_Resin_Crush_Gray.jpg
+
+newmtl Water_Deep
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Water_Deep.jpg
+
+newmtl Wood_Board_Cork
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Wood_Board_Cork.jpg
+
+newmtl Wood_Cherry_Original
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Wood_Cherry_Original.jpg
+
+newmtl Wood_OSB
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Wood_OSB.jpg
+
+newmtl Wood__Floor
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/Wood__Floor.jpg
+
+newmtl __Brick_Antique_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Brick_Antique_1.jpg
+
+newmtl __Brick_Antique_2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Brick_Antique_2.jpg
+
+newmtl __Brick_Antique_3
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Brick_Antique_3.jpg
+
+newmtl __Concrete_Aggregate_Smoke_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Concrete_Aggregate_Smoke_1.jpg
+
+newmtl __Fencing_Metal_Straight_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Fencing_Metal_Straight_1.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Fencing_Metal_Straight_1.png
+
+newmtl __Ivory_
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 0.941176
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl __LightGray_
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.662745 0.662745 0.662745
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl __Metal_Rusted_2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Metal_Rusted_2.jpg
+
+newmtl __Wood_Cherry_Original_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Wood_Cherry_Original_1.jpg
+
+newmtl __Wood_Plywood_Knots_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/__Wood_Plywood_Knots_1.jpg
+
+newmtl material_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/material_1.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/material_1.png
+
+newmtl material_22
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/material_22.jpg
+
+newmtl material_4
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/material_4.png
+map_d /Users/Maurizio/Desktop/Possible buldings/apribili/House/model/material_4.png
