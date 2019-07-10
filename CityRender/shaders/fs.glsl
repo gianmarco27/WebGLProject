@@ -28,7 +28,6 @@ vec4 diffuse;
 vec4 diffColor;
 vec4 specular; 
 
-
 struct DirectionalLight {
     vec3 dir;
     float theta;
@@ -36,7 +35,6 @@ struct DirectionalLight {
     vec4 col;
    
 }directLight;
-
 
 struct PointLight {
    
@@ -65,7 +63,7 @@ void main() {
 
  
     vec3 normalVec = normalize(fs_norm);
-    
+
     //LIGHTS
     
     //Initialize direct light
@@ -85,44 +83,70 @@ void main() {
     */
 
     
-
+    //Setup distance spotlights
+    
+    float offsetL = 20.0; // angular semidistance between the two spotlights
+    float R= 0.5;
     
     //Initialize spotlight 1
     spotLight1.LConeOut = 25.0;
     spotLight1.LConeIn = 20.0 ;
-    vec3 LDirSpot =   vec3(0.0,0.0,1.0);
-    spotLight1.LPos = vec3(0.0,1.0,1.0);
+
+    vec3 LDirSpot = vec3(0.0,0.0,1.0);
+
+
+    
+    //LIGHTS
+    
+
+    spotLight1.LPos= vec3(float(R * sin(radians(Angle+offsetL))),float(R * cos(radians(Angle+offsetL))),1.0);
+    spotLight1.LPos.x += cameraPos.x + float(R * sin(radians(Angle)));
+    spotLight1.LPos.y += cameraPos.y + float(R * cos(radians(Angle)));
+    spotLight1.LPos.z += cameraPos.z;
+    
+     
+    
 
     float LCosOut = cos(radians(spotLight1.LConeOut / 2.0));
     float LCosIn = cos(radians(spotLight1.LConeIn / 2.0));  //formula used from slide 
     
-    spotLight1.dir = normalize(spotLight1.LPos - fs_pos +cameraPos); 
+    spotLight1.dir = normalize(spotLight1.LPos - fs_pos); 
     float CosAngle = dot(spotLight1.dir, LDirSpot); //TODO review
     
     spotLight1.col = lightColorS * pow(spotLight1.g / length(spotLight1.LPos - fs_pos), spotLight1.LDecay) *
 						clamp((CosAngle - LCosOut) / (LCosIn - LCosOut), 0.0, 1.0);
                         
-       
-    //Initialize spotlight 2
+                                      
+     //Initialize spotlight 2
     spotLight2.LConeOut = 25.0;
     spotLight2.LConeIn = 20.0 ;
     vec3 LDirSpot2 = vec3(0.0,0.0,1.0);
-    spotLight2.LPos= vec3(0.2,1.0,1.0);
+    spotLight2.LPos= vec3(float(R * sin(radians(Angle-offsetL))),float(R * cos(radians(Angle-offsetL))),1.0);
+    
+    spotLight2.LPos.x += cameraPos.x + float(R * sin(radians(Angle)));
+    spotLight2.LPos.y += cameraPos.y + float(R * cos(radians(Angle)));
+    spotLight2.LPos.z += cameraPos.z;
+
+    
+   
+    
 
     float LCosOut2 = cos(radians(spotLight2.LConeOut / 2.0));
-    float LCosIn2 = cos(radians(spotLight2.LConeIn / 2.0));
+    float LCosIn2 = cos(radians(spotLight2.LConeIn / 2.0));  //formula used from slide 
     
-    spotLight2.dir = normalize(spotLight2.LPos - fs_pos +cameraPos);
-    float CosAngle2 = dot(spotLight2.dir, LDirSpot2); //non mi convince 
+    spotLight2.dir = normalize(spotLight2.LPos - fs_pos); 
+    float CosAngle2 = dot(spotLight2.dir, LDirSpot2); //TODO review
     
-    spotLight2.col = lightColorS2 * pow(spotLight2.g / length(spotLight2.LPos - fs_pos), spotLight2.LDecay) *
+    spotLight2.col = lightColorS * pow(spotLight2.g / length(spotLight2.LPos - fs_pos), spotLight2.LDecay) *
 						clamp((CosAngle2 - LCosOut2) / (LCosIn2 - LCosOut2), 0.0, 1.0);
+                        
+       
+    
                         
                         
     // Final components                    
     vec3 lightDir= directLight.dir + pointLight.dir + spotLight1.dir + spotLight2.dir;
     vec4 lightCol= directLight.col + pointLight.col + spotLight1.col + spotLight2.col;
-    
     
     vec4 texColor= texture(u_texture, uvFS);
     if(texColor.a < 0.5)  // cut to 0.5 considering objects are only visible (1.0) or invisible (0.0) 

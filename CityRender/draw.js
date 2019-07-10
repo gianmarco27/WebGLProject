@@ -51,7 +51,9 @@
     var UVFileNamePropertyIndex = new Array();
     var diffuseColorPropertyIndex = new Array();
     var specularColorPropertyIndex = new Array();
-
+    var cameraPosUniformLocation;
+    var angleLocation;
+    var matrixViewLocation;
 
     var perspectiveMatrix;
     var positionAttributeLocation;
@@ -62,6 +64,7 @@
     var textLocation;
     var matrixViewWorldLocation;
     var currentModel;
+
 
 function main() {
     
@@ -103,6 +106,9 @@ function main() {
     matrixWorldLocation= gl.getUniformLocation(program,"world");
     textLocation = gl.getUniformLocation(program, "u_texture");
     matrixViewWorldLocation = gl.getUniformLocation(program, "viewWorld");
+    cameraPosUniformLocation = gl.getUniformLocation(program, "CameraPos");
+    angleLocation = gl.getUniformLocation(program, "angle");
+    matrixWorldLocation = gl.getUniformLocation(program,"world");
 
     for(let MapI = 0; MapI < MapWidth; MapI ++){
         world[MapI] = [];
@@ -136,9 +142,10 @@ function main() {
                             roadTextCoords[currentModelWorld][j] = roadModel[currentModelWorld].meshes[j].texturecoords[0];
                         }
                     }
-                }
     }      
-    
+    }
+        
+        
     for(let modelIndex = 0; modelIndex < roadVertices.length; modelIndex ++){
                 modelMeshMatIndex[modelIndex] = new Array();
                 UVFileNamePropertyIndex[modelIndex] = new Array();
@@ -205,6 +212,7 @@ function drawScene() {
 
         //Calculating viewMatrix
         viewMatrix = MakeHorizontalView(relativeCameraVector[0], relativeCameraVector[1], relativeCameraZ, cameraElevation, cameraAngle);
+        
 
         utils.resizeCanvasToDisplaySize(gl.canvas);
         gl.clearColor(0.85, 0.85, 0.85, 1.0);
@@ -225,13 +233,17 @@ function drawScene() {
 
                         gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
                         gl.uniformMatrix4fv(matrixWorldLocation,gl.FALSE, utils.transposeMatrix(world[MapI][MapJ]));
+                        gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewMatrix));
                         gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewWorldMatrix));
 
                         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
                         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[currentModel][meshIndex]), gl.STATIC_DRAW);
                         gl.enableVertexAttribArray(positionAttributeLocation);
                         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-
+                                
+                        gl.uniform3fv(cameraPosUniformLocation, new Array(relativeCameraVector[0],relativeCameraVector[1],relativeCameraZ));                
+                        gl.uniform3fv(angleLocation, new Array(cameraAngle,0.0,0.0)); //TODO
+              
                         gl.activeTexture(gl.TEXTURE0);
                         gl.bindTexture(gl.TEXTURE_2D, texture[currentModel][meshIndex]);
 
@@ -240,12 +252,10 @@ function drawScene() {
                         gl.enableVertexAttribArray(normalAttributeLocation);
                         gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-
                         gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
                         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[currentModel][meshIndex]), gl.STATIC_DRAW);
                         gl.enableVertexAttribArray(uvAttributeLocation);
                         gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
-
 
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
                         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[currentModel][meshIndex]), gl.STATIC_DRAW);
@@ -276,7 +286,7 @@ function MakeHorizontalView(cx, cy, cz, elev, ang) {
 
 		tmp = utils.multiplyMatrices(Ry, T);
 		out = utils.multiplyMatrices(Rx, tmp);
-
+    
 		return out;
 	}
 
