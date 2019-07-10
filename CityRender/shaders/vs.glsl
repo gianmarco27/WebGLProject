@@ -28,7 +28,7 @@ uniform vec3 angle;
 void main() {
 
   uvFS = a_uv;
-  fs_norm = vec3(inverse(world) * vec4(a_normal,1.0)); 
+  fs_norm = vec3(transpose(inverse(world)) * vec4(a_normal,1.0)); 
   fs_pos = vec3(world * vec4(a_position, 1.0));
   cameraPos = CameraPos;
   
