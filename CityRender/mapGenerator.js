@@ -12,7 +12,8 @@ var directions = ["N","S","E","W"];
 var oppositeDirection = ["S","N","W","E"];
 var directionSlope = [[0,-1],[0,1],[-1,0],[1,0]];
 var currentDirection;
-
+var currentWidth;
+var currentHeight;
 //initializing matrix to avoid sanity checks within the code
 for(let i = 0; i < MapWidth; i++){
     Map[i] = [];
@@ -97,8 +98,8 @@ function getHighestSlot(){
 function createPath(start,end,direction){
     let newPath = true;
     let stuck = false;
-    let currentWidth = start[0];
-    let currentHeight = start[1];
+    currentWidth = start[0];
+    currentHeight = start[1];
     let previousWidth,previousHeight;
     let currentDirection = directions.indexOf(direction);
     let tempDirection;
@@ -157,6 +158,30 @@ function crossingCorrection(){
         for(let j = 0; j < MapHeight; j++){
             if(Map[i][j] > 0)
                 Map[i][j] = getStreetsAround(i,j);
+            if(Map[i][j] == 2){
+                if(Map[wrapAround(i,-1)][j] > 0)
+                    if(Map[i][wrapAround(j,-1)] > 0)
+                        detailMap[i][j].rotation = 90.0;
+                if(Map[wrapAround(i,-1)][j] > 0)
+                    if(Map[i][wrapAround(j,+1)] > 0)
+                        detailMap[i][j].rotation = 180.0;
+                if(Map[wrapAround(i,+1)][j] > 0)
+                    if(Map[i][wrapAround(j,-1)] > 0)
+                        detailMap[i][j].rotation = 0.0;
+                if(Map[wrapAround(i,+1)][j] > 0)
+                    if(Map[i][wrapAround(j,+1)] > 0)
+                        detailMap[i][j].rotation = -90.0;
+            }
+            if(Map[i][j] == 3){
+                if(Map[wrapAround(i,-1)][j] == 0)
+                    detailMap[i][j].rotation = 90.0;
+                if(Map[wrapAround(i,+1)][j] == 0)
+                    detailMap[i][j].rotation = -90.0;
+                if(Map[i][wrapAround(j,-1)] == 0)
+                    detailMap[i][j].rotation = 0.0;
+                if(Map[i][wrapAround(j,+1)] == 0)
+                    detailMap[i][j].rotation = 180.0;
+            }
         }
     }
     Map[MapWidth/2][0] = getStreetsAround(MapWidth/2,0);
@@ -192,4 +217,4 @@ console.log(JSON.stringify(Map));
 //crossingCorrection();
 //curveCorrection();
 //console.log(JSON.stringify(Map));
-draw.main();
+main();

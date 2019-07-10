@@ -1,115 +1,157 @@
 #version 300 es
-
-precision mediump int;
 precision mediump float;
-
 in vec2 uvFS;
-in vec3 Normal;
-in vec3 FragPos;
-in vec3 eyeVec;
-in vec3 PixPos;
-
+in vec3 fs_norm;
+in vec3 fs_pos;
+in vec3 cameraPos;
+in vec3 Angle;
 out vec4 outColor;
+
 uniform sampler2D u_texture;
 
 
-vec3 lightColor = vec3(2.0f,2.0f,2.1f);
-vec3 objectColor = vec3(1.0f,1.0f,1.0f);
-vec3 lightDir;
-
-// Spotlight
-vec3 lightPosSpot1 = vec3(0.2,0,0.0);
-vec3 lightPosSpot2 = vec3(-0.2,0,0.0);
-
-//Point Light
-vec3 lightPos= vec3(0,1,1);
+vec4 lightColor = vec4(0.3f,0.3f,0.3f,1.0); //directional light
+vec4 lightColorP = vec4(1.0f,0.0f,0.0f,1.0); //point light
+vec4 lightColorS = vec4(1.0f,1.0f,0.0f,1.0); //spotlight1
+vec4 lightColorS2 = vec4(1.0f,1.0f,0.0f,1.0); //spotlight2
 
 
-//distance = 13
-float constant = 1.0;
-float linear = 0.35;
-float quadratic = 0.44;
+vec4 ambientLightColor= vec4(0.34f,0.34f,0.34f,1.0); //used only to calculate the ambient contribute 
+vec4 diffuseColor; // used to calculate diffColor that will be used in the diffuseLambert
+vec4 specularColor; //used to calculate specular phong 
 
-vec4 calculateSpotLight(in vec3 lightVec, in vec3 normalVec){
-  
-  vec3 spotDirection = vec3(0.0,0.0,1.0);
-  float cutOffAngle = cos(radians(20.0));
-  
-  vec4 color = vec4(1.0,1.0,0.7,1.0);
-  float SpotFac = dot(-lightVec,spotDirection);
-    
-  if( SpotFac > cutOffAngle ){
-   float att = clamp(dot(normalVec,-lightVec),0.0,1.0);
-   color = att* color * (1.0 - (1.0 - SpotFac) * 1.0/(1.0 - cutOffAngle));
-  }else{
-    color = vec4(0.0,0.0,0.0,1.0); 
-  }
-  
-  
-  return color;
-  
-}
 
+
+vec4 ambient;
+vec4 ambColor;
+vec4 diffuse;
+vec4 diffColor;
+vec4 specular; 
+
+
+struct DirectionalLight {
+    vec3 dir;
+    float theta;
+    float phi;
+    vec4 col;
+   
+}directLight;
+
+
+struct PointLight {
+   
+   vec3 LPos;
+   vec3 dir;
+   float LDecay;
+   vec4 col;
+   float g;
+}pointLight; 
+
+
+struct SpotLight{
+   vec3 LPos;
+   float theta;
+   float phi;
+   float LConeOut; //angolo esterno 
+   float LConeIn; //angolo interno 
+   float LDecay;
+   float g; 
+   vec3 dir;
+   vec4 col;
+}spotLight1,spotLight2;
 
 
 void main() {
 
-    float ambientStrength = 0.7;
-    vec3 ambient = ambientStrength * lightColor;
-    vec3 norm = normalize(Normal);
-    lightDir = lightPos - FragPos;
-    vec3 lightDirNorm = normalize(lightDir);
-    float diff = max(dot(norm, lightDirNorm),0.0);
-    vec3 diffuse = diff * lightColor ;
+ 
+    vec3 normalVec = normalize(fs_norm);
     
+    //LIGHTS
     
-   float distance = length(lightDir);
-   float attenuation = 1.0 / (constant + linear * distance + 
-    		    quadratic * (distance * distance));    
-                
-   ambient  *= attenuation; 
-   diffuse  *= attenuation;
-    
-   vec3 LightVec1 = normalize(PixPos-lightPosSpot1);
-   vec3 LightVec2 = normalize(PixPos-lightPosSpot2);
+    //Initialize direct light
+    vec3 LDir= vec3(0.0,0.0,0.0); //direction directional light 
+    directLight.dir= LDir;
+    directLight.col= lightColor;
     
 
-    vec3 result = ambient + diffuse +
-    vec3(calculateSpotLight(LightVec1, Normal)) +
-    vec3(calculateSpotLight(LightVec2, Normal));
+   /* NOT ACTIVE
+    //Initialize point light
+    pointLight.LPos = vec3(0.0,2.0,1.0);
+    pointLight.g=0.5f;
+    pointLight.LDecay= 1.0f;
     
-    ;
+    pointLight.dir= normalize(pointLight.LPos - fs_pos);
+    pointLight.col= lightColorP * pow(pointLight.g / length(pointLight.LPos - fs_pos), pointLight.LDecay);
+    */
+
+    
+
+    
+    //Initialize spotlight 1
+    spotLight1.LConeOut = 25.0;
+    spotLight1.LConeIn = 20.0 ;
+    vec3 LDirSpot =   vec3(0.0,0.0,1.0);
+    spotLight1.LPos = vec3(0.0,1.0,1.0);
+
+    float LCosOut = cos(radians(spotLight1.LConeOut / 2.0));
+    float LCosIn = cos(radians(spotLight1.LConeIn / 2.0));  //formula used from slide 
+    
+    spotLight1.dir = normalize(spotLight1.LPos - fs_pos +cameraPos); 
+    float CosAngle = dot(spotLight1.dir, LDirSpot); //TODO review
+    
+    spotLight1.col = lightColorS * pow(spotLight1.g / length(spotLight1.LPos - fs_pos), spotLight1.LDecay) *
+						clamp((CosAngle - LCosOut) / (LCosIn - LCosOut), 0.0, 1.0);
+                        
+       
+    //Initialize spotlight 2
+    spotLight2.LConeOut = 25.0;
+    spotLight2.LConeIn = 20.0 ;
+    vec3 LDirSpot2 = vec3(0.0,0.0,1.0);
+    spotLight2.LPos= vec3(0.2,1.0,1.0);
+
+    float LCosOut2 = cos(radians(spotLight2.LConeOut / 2.0));
+    float LCosIn2 = cos(radians(spotLight2.LConeIn / 2.0));
+    
+    spotLight2.dir = normalize(spotLight2.LPos - fs_pos +cameraPos);
+    float CosAngle2 = dot(spotLight2.dir, LDirSpot2); //non mi convince 
+    
+    spotLight2.col = lightColorS2 * pow(spotLight2.g / length(spotLight2.LPos - fs_pos), spotLight2.LDecay) *
+						clamp((CosAngle2 - LCosOut2) / (LCosIn2 - LCosOut2), 0.0, 1.0);
+                        
+                        
+    // Final components                    
+    vec3 lightDir= directLight.dir + pointLight.dir + spotLight1.dir + spotLight2.dir;
+    vec4 lightCol= directLight.col + pointLight.col + spotLight1.col + spotLight2.col;
+    
+    
     vec4 texColor= texture(u_texture, uvFS);
     if(texColor.a < 0.5)  // cut to 0.5 considering objects are only visible (1.0) or invisible (0.0) 
         discard;
-    outColor = vec4(result, 1.0)* texColor;
+    
+    ambColor = texColor;
+    diffColor = texColor;
+    
+    
+    //Ambient 
+     vec4 ambientAmbient = ambientLightColor * ambColor;
+    //Diffuse 
+    vec4 diffuseLambert = lightCol * clamp(dot(normalVec, lightDir),0.0,1.0) * diffColor;
+    
+    //Final output 
+    outColor = vec4(clamp(ambientAmbient + diffuseLambert, 0.0, 1.0));
+
 }
 
 
+/* Transformation formulas for rotation
 
-/* distance = 7
-float constant = 1.0;
-float linear = 0.7;
-float quadratic = 1.8;
+    
+    LDirSpot.x = float((LDirSpot.x * cos(radians(-Angle))) - (LDirSpot.y * sin(radians(-Angle))));
+    LDirSpot.y= float((LDirSpot.x * sin(radians(-Angle))) + (LDirSpot.y * cos(radians(-Angle))));
+    
+    spotLight1.LPos.x = float((spotLight1.LPos.x * cos(radians(-Angle))) - spotLight1.LPos.y * sin((radians(-Angle))));
+    spotLight1.LPos.y = float((spotLight1.LPos.x * sin(radians(-Angle))) + spotLight1.LPos.y * cos((radians(-Angle))));
 
 */
 
-/* distance = 20
-float constant = 1.0;
-float linear = 0.22;
-float quadratic = 0.20;
-*/
 
-
-/* distance = 32
-float constant = 1.0;
-float linear = 0.14;
-float quadratic = 0.07;
-*/
-
-
-/* distance=200
-float constant = 1.0;
-float linear = 0.022;
-float quadratic = 0.0019;
-*/
