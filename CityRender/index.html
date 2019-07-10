@@ -11,7 +11,7 @@
       }
       canvas {
         width: 100vw;
-        height: 97vh;
+        height: 95vh;
         display: block;
         background-color: white;
       }
@@ -22,7 +22,12 @@
 <body>
     <canvas id="c"></canvas>
     <div class="slidecontainer">
-      <input type="range" min="0" max="180" value="90" class="slider" id="LightRange">
+        <div> Directional Light Intensity </div>
+        <input type="range" min="0" max="1.00" value="0.5" class="slider" id="DirectionalLightIntensity" step="0.01">
+        <div> Directional Light X pos </div>
+        <input type="range" min="-40" max="40" value="0" class="slider" id="DirectionalLightX" step = "0.1">
+        <div> Directional Light Y pos </div>
+        <input type="range" min="-40" max="40" value="0" class="slider" id="DirectionalLightY" step = "0.1">
     </div>  
     <script type="text/javascript" src="utils.js"></script>
     <script type="text/javascript" src="math.js"></script>

@@ -106,9 +106,11 @@ function main() {
     matrixWorldLocation= gl.getUniformLocation(program,"world");
     textLocation = gl.getUniformLocation(program, "u_texture");
     matrixViewWorldLocation = gl.getUniformLocation(program, "viewWorld");
-    cameraPosUniformLocation = gl.getUniformLocation(program, "CameraPos");
+    cameraPosUniformLocation = gl.getUniformLocation(program, "cameraPos");
     angleLocation = gl.getUniformLocation(program, "angle");
     matrixWorldLocation = gl.getUniformLocation(program,"world");
+    sliderDirectionalLightIntensity = gl.getUniformLocation(program,"DirectionalLightIntensity");
+    sliderDirectionalLightDirection = gl.getUniformLocation(program,"DirectionalLightDirection");
 
     for(let MapI = 0; MapI < MapWidth; MapI ++){
         world[MapI] = [];
@@ -202,7 +204,12 @@ function main() {
 
 function drawScene() {
     
-        lightAngle = document.getElementById("LightRange").value;
+        //sliders values 
+        directionalLightIntensity = document.getElementById("DirectionalLightIntensity").value;
+        directionalLightX = document.getElementById("DirectionalLightX").value;
+        directionalLightY = document.getElementById("DirectionalLightY").value;
+
+    
         // camera speed are set inside keyfunctions
         // now we obtain every draw the camera position by computing the matrices with the speed
         cameraAngle += cameraAngleSpeed;
@@ -243,6 +250,9 @@ function drawScene() {
                                 
                         gl.uniform3fv(cameraPosUniformLocation, new Array(relativeCameraVector[0],relativeCameraVector[1],relativeCameraZ));                
                         gl.uniform3fv(angleLocation, new Array(cameraAngle,0.0,0.0)); //TODO
+                
+                        gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity-0.05)); 
+                        gl.uniform3fv(sliderDirectionalLightDirection, new Array(directionalLightX,directionalLightY,0.0));
               
                         gl.activeTexture(gl.TEXTURE0);
                         gl.bindTexture(gl.TEXTURE_2D, texture[currentModel][meshIndex]);
