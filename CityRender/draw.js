@@ -111,6 +111,11 @@ function main() {
     matrixWorldLocation = gl.getUniformLocation(program,"world");
     sliderDirectionalLightIntensity = gl.getUniformLocation(program,"DirectionalLightIntensity");
     sliderDirectionalLightDirection = gl.getUniformLocation(program,"DirectionalLightDirection");
+    sliderPointLightIntensity = gl.getUniformLocation(program,"PointLightIntensity");
+    sliderPointLightDirection= gl.getUniformLocation(program,"PointLightDirection");
+    sliderPointLightG = gl.getUniformLocation(program,"PointLightG");
+    sliderPointLightDecayFactor = gl.getUniformLocation(program,"PointLightDecayFactor");
+    headlightsActiveLocation = gl.getUniformLocation(program,"headlightsOn");
 
     for(let MapI = 0; MapI < MapWidth; MapI ++){
         world[MapI] = [];
@@ -208,7 +213,13 @@ function drawScene() {
         directionalLightIntensity = document.getElementById("DirectionalLightIntensity").value;
         directionalLightX = document.getElementById("DirectionalLightX").value;
         directionalLightY = document.getElementById("DirectionalLightY").value;
-
+        activeHeadlights  = document.getElementById("SpotlightsActive").value;
+        pointLightIntensity = document.getElementById("PointLightIntensity").value
+        pointLightX = document.getElementById("PointLightX").value;
+        pointLightY = document.getElementById("PointLightY").value;
+        pointLightG = document.getElementById("PointLightG").value;
+        pointLightDecayFactor = document.getElementById("PointLightDecayFactor").value;
+    
     
         // camera speed are set inside keyfunctions
         // now we obtain every draw the camera position by computing the matrices with the speed
@@ -249,10 +260,18 @@ function drawScene() {
                         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
                                 
                         gl.uniform3fv(cameraPosUniformLocation, new Array(relativeCameraVector[0],relativeCameraVector[1],relativeCameraZ));                
-                        gl.uniform3fv(angleLocation, new Array(cameraAngle,0.0,0.0)); //TODO
+                        gl.uniform1f(angleLocation, cameraAngle);
                 
-                        gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity-0.05)); 
+                        gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity)); 
                         gl.uniform3fv(sliderDirectionalLightDirection, new Array(directionalLightX,directionalLightY,0.0));
+                        
+                        
+                        gl.uniform3fv(sliderPointLightIntensity, new Array(pointLightIntensity ,pointLightIntensity,pointLightIntensity)); 
+                        gl.uniform3fv(sliderPointLightDirection, new Array(pointLightX,pointLightY,0.0));
+                        
+                        gl.uniform1f(sliderPointLightG, pointLightG);
+                        gl.uniform1f(sliderPointLightDecayFactor, pointLightDecayFactor);
+                        gl.uniform1f(headlightsActiveLocation, activeHeadlights);
               
                         gl.activeTexture(gl.TEXTURE0);
                         gl.bindTexture(gl.TEXTURE_2D, texture[currentModel][meshIndex]);

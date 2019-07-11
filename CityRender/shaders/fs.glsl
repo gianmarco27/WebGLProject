@@ -8,10 +8,16 @@ in vec3 fs_pos;
 out vec4 outColor;
 
 uniform vec3 cameraPos; //cx cy cz
-uniform vec3 angle; // rotation angle of camera 
+uniform float angle; // rotation angle of camera 
 uniform sampler2D u_texture;
 uniform vec3 DirectionalLightIntensity; // value from slider
 uniform vec3 DirectionalLightDirection; // value from slider
+uniform vec3 PointLightIntensity;
+uniform vec3 PointLightDirection;
+uniform float PointLightG;
+uniform float PointLightDecayFactor;
+uniform float headlightsOn;
+
 
 vec4 lightColor = vec4(0.3f,0.3f,0.3f,1.0); //directional light
 vec4 lightColorP = vec4(1.0f,0.0f,0.0f,1.0); //point light
@@ -63,32 +69,30 @@ struct SpotLight{
 
 void main() {
 
-    lightColor = vec4(DirectionalLightIntensity.x, DirectionalLightIntensity.y, DirectionalLightIntensity.z,1.0);
-
+    lightColor = vec4(DirectionalLightIntensity.x, DirectionalLightIntensity.y, DirectionalLightIntensity.z-0.05,1.0);
+    lightColorP= vec4(PointLightIntensity.x,PointLightIntensity.y,PointLightIntensity.z - 0.05,1.0);
  
     vec3 normalVec = normalize(fs_norm);
 
 //Lights
     
     //Initialize direct light
-    vec3 LDir= vec3(0.0,0.0,0.0); //direction directional light
+    vec3 LDir= vec3(0.0,0.0,1.0); //direction directional light
    
     
-    LDir = vec3(DirectionalLightDirection.x,DirectionalLightDirection.y,0.0);
+    LDir = vec3(DirectionalLightDirection.x,DirectionalLightDirection.y,1.0);
     
     directLight.dir= LDir;
     directLight.col= lightColor;
     
 
-   /* NOT ACTIVE
-    //Initialize point light
-    pointLight.LPos = vec3(0.0,2.0,1.0);
-    pointLight.g=0.5f;
-    pointLight.LDecay= 1.0f;
+ //Initialize point light
+    pointLight.LPos = vec3(PointLightDirection.x,PointLightDirection.y,0.0);
+    pointLight.g= PointLightG;
+    pointLight.LDecay= PointLightDecayFactor;
     
     pointLight.dir= normalize(pointLight.LPos - fs_pos);
     pointLight.col= lightColorP * pow(pointLight.g / length(pointLight.LPos - fs_pos), pointLight.LDecay);
-    */
 
     
 //Setup distance spotlights    
@@ -140,8 +144,8 @@ void main() {
                         
                         
 // Final components                    
-    vec3 lightDir= directLight.dir + pointLight.dir + spotLight1.dir + spotLight2.dir;
-    vec4 lightCol= directLight.col + pointLight.col + spotLight1.col + spotLight2.col;
+    vec3 lightDir= directLight.dir + pointLight.dir + spotLight1.dir * headlightsOn + spotLight2.dir * headlightsOn;
+    vec4 lightCol= directLight.col + pointLight.col + spotLight1.col *headlightsOn + spotLight2.col * headlightsOn;
 //Texture color
     vec4 texColor= texture(u_texture, uvFS);
     if(texColor.a < 0.5)  // cut to 0.5 considering objects are only visible (1.0) or invisible (0.0) 
