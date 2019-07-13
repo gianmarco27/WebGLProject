@@ -228,13 +228,13 @@ function decorationFiller(){
                   Map[wrapAround(i,-1)][wrapAround(j,-1)] > 0 || Map[wrapAround(i,-1)][wrapAround(j,+1)] > 0 ||
                   Map[wrapAround(i,+1)][wrapAround(j,-1)] > 0 || Map[wrapAround(i,+1)][wrapAround(j,+1)] > 0)){
                         decorationMap[i][j] = getRandomInt(6,8);
-                        if(Map[wrapAround(i,-1)][j] == 0)
+                        if(Map[wrapAround(i,-1)][j] > 0)
                             detailMap[i][j].rotation = 90.0;
-                        if(Map[wrapAround(i,+1)][j] == 0)
+                        if(Map[wrapAround(i,+1)][j] > 0)
                             detailMap[i][j].rotation = -90.0;
-                        if(Map[i][wrapAround(j,-1)] == 0)
+                        if(Map[i][wrapAround(j,-1)] > 0)
                             detailMap[i][j].rotation = 0.0;
-                        if(Map[i][wrapAround(j,+1)] == 0)
+                        if(Map[i][wrapAround(j,+1)] > 0)
                             detailMap[i][j].rotation = 180.0;
             }
         }

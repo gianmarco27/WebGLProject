@@ -70,34 +70,34 @@ struct SpotLight{
 void main() {
 
     lightColor = vec4(DirectionalLightIntensity.x, DirectionalLightIntensity.y, DirectionalLightIntensity.z-0.05,1.0);
-    lightColorP= vec4(PointLightIntensity.x,PointLightIntensity.y,PointLightIntensity.z - 0.05,1.0);
+    lightColorP = vec4(PointLightIntensity.x,PointLightIntensity.y,PointLightIntensity.z - 0.05,1.0);
  
     vec3 normalVec = normalize(fs_norm);
 
 //Lights
     
     //Initialize direct light
-    vec3 LDir= vec3(0.0,0.0,1.0); //direction directional light
+    vec3 LDir = vec3(0.0,0.0,1.0); //direction directional light
    
     
     LDir = vec3(DirectionalLightDirection.x,DirectionalLightDirection.y,1.0);
     
-    directLight.dir= LDir;
-    directLight.col= lightColor;
+    directLight.dir = LDir;
+    directLight.col = lightColor;
     
 
  //Initialize point light
     pointLight.LPos = vec3(PointLightDirection.x,PointLightDirection.y,0.0);
-    pointLight.g= PointLightG;
-    pointLight.LDecay= PointLightDecayFactor;
+    pointLight.g = PointLightG;
+    pointLight.LDecay = PointLightDecayFactor;
     
-    pointLight.dir= normalize(pointLight.LPos - fs_pos);
-    pointLight.col= lightColorP * pow(pointLight.g / length(pointLight.LPos - fs_pos), pointLight.LDecay);
+    pointLight.dir = normalize(pointLight.LPos - fs_pos);
+    pointLight.col = lightColorP * pow(pointLight.g / length(pointLight.LPos - fs_pos), pointLight.LDecay);
 
     
 //Setup distance spotlights    
     float offsetL = 20.0; // angular semidistance between the two spotlights
-    float R= 0.5;
+    float R = 0.5;
     
 //Initialize spotlight 1
     spotLight1.LConeOut = 25.0;
@@ -105,7 +105,7 @@ void main() {
 
     vec3 LDirSpot = vec3(0.0,0.0,1.0);
 
-    spotLight1.LPos= vec3(float(R * sin(radians(angle+offsetL))),float(R * cos(radians(angle+offsetL))),1.0);
+    spotLight1.LPos = vec3(float(R * sin(radians(angle+offsetL))),float(R * cos(radians(angle+offsetL))),1.0);
     spotLight1.LPos.x += cameraPos.x + float(R * sin(radians(angle)));
     spotLight1.LPos.y += cameraPos.y + float(R * cos(radians(angle)));
     spotLight1.LPos.z += cameraPos.z;
@@ -124,7 +124,7 @@ void main() {
     spotLight2.LConeOut = 25.0;
     spotLight2.LConeIn = 20.0 ;
     vec3 LDirSpot2 = vec3(0.0,0.0,1.0);
-    spotLight2.LPos= vec3(float(R * sin(radians(angle-offsetL))),float(R * cos(radians(angle-offsetL))),1.0);
+    spotLight2.LPos = vec3(float(R * sin(radians(angle-offsetL))),float(R * cos(radians(angle-offsetL))),1.0);
     
     spotLight2.LPos.x += cameraPos.x + float(R * sin(radians(angle)));
     spotLight2.LPos.y += cameraPos.y + float(R * cos(radians(angle)));
@@ -144,15 +144,19 @@ void main() {
                         
                         
 // Final components                    
-    vec3 lightDir= directLight.dir + pointLight.dir + spotLight1.dir * headlightsOn + spotLight2.dir * headlightsOn;
-    vec4 lightCol= directLight.col + pointLight.col + spotLight1.col *headlightsOn + spotLight2.col * headlightsOn;
+    vec3 lightDir = directLight.dir + pointLight.dir + spotLight1.dir * headlightsOn + spotLight2.dir * headlightsOn;
+    vec4 lightCol = directLight.col + pointLight.col + spotLight1.col *headlightsOn + spotLight2.col * headlightsOn;
 //Texture color
-    vec4 texColor= texture(u_texture, uvFS);
+    vec4 texColor = texture(u_texture, uvFS);
     if(texColor.a < 0.5)  // cut to 0.5 considering objects are only visible (1.0) or invisible (0.0) 
         discard;
-    
-    ambColor = texColor;
-    diffColor = texColor;
+    if (texColor != vec4(0.0,0.0,0.0,1.0)){
+        ambColor = texColor;
+        diffColor = texColor;
+    } else {
+        ambColor = vec4(1.5,1.5,1.5,1.0);
+        diffColor = texColor;
+    }
     
     
 //Ambient 

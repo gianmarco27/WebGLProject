@@ -11,7 +11,7 @@
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
     var cameraDelta = 0.01;
-    var speedFactor = 2;
+    var speedFactor = 3;
     var cameraSpeedsVector = [0.0,0.0];
     var cameraAngleSpeed = 0.0;
     var cameraElevationSpeed = 0.0;
@@ -21,7 +21,7 @@
     var mapXrep = 0;
     var mapYrep = 0;
     var modelErrorCorrection = 0.0;
-    var renderRange = 5;
+    var renderRange = 10;
     var lightAngle = 90;
 
     var shaderDir = new URL(origin) + "CityRender/shaders/";
@@ -100,14 +100,14 @@ function main() {
     });
     gl.useProgram(program);
 
-    utils.get_json(assetDir + 'roads/road02.json', function(loadedModel){roadModel[0] = loadedModel;});
+    utils.get_json(assetDir + 'roads/road04.json', function(loadedModel){roadModel[0] = loadedModel;});
     utils.get_json(assetDir + 'roads/road05.json', function(loadedModel){roadModel[1] = loadedModel;});
     utils.get_json(assetDir + 'roads/road03.json', function(loadedModel){roadModel[2] = loadedModel;});
     utils.get_json(assetDir + 'roads/road01.json', function(loadedModel){roadModel[3] = loadedModel;});
     utils.get_json(assetDir + 'roads/road06.json', function(loadedModel){roadModel[4] = loadedModel;});
     utils.get_json(assetDir + 'buildings/building2.json', function(loadedModel){roadModel[5] = loadedModel;});
-    utils.get_json(assetDir + 'buildings/building9.json', function(loadedModel){roadModel[6] = loadedModel;});
-    utils.get_json(assetDir + 'buildings/building1light.json', function(loadedModel){roadModel[7] = loadedModel;});
+    utils.get_json(assetDir + 'buildings/house2.json', function(loadedModel){roadModel[6] = loadedModel;});
+    utils.get_json(assetDir + 'buildings/building9.json', function(loadedModel){roadModel[7] = loadedModel;});
     utils.get_json(assetDir + 'street_lamp/street_lamp.json', function(loadedModel){roadModel[8] = loadedModel;});
 
     perspectiveMatrix = utils.MakePerspective(60, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
@@ -255,8 +255,9 @@ function main() {
                                 gl.bindTexture(gl.TEXTURE_2D, texture[this.obj][this.mesh]);
                                 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
                                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this);
-                                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-                                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                                gl.generateMipmap(gl.TEXTURE_2D);
+                                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+                                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                                 gl.bindTexture(gl.TEXTURE_2D, null);
                             };
                         }
@@ -633,6 +634,10 @@ function modelCentererAndScaler(model){
     let xRateo = (maxX-minX)/xSize;
     let zRateo = (maxZ-minZ)/ySize;
     let yRateo = Math.min(xRateo,zRateo);
+    if(model == roadVertices[4]){
+        xRateo = (maxX-minX)/(xSize*0.5);
+        zRateo = (maxZ-minZ)/(ySize*0.5);
+    }
     for (let i = 0; i < model.length; i++){
         for (let j = 0; j < model[i].length; j++){
             model[i][j] += offsetX;

@@ -1,0 +1,100 @@
+# Blender MTL File: 'None'
+# Material Count: 9
+
+newmtl Fencing_Metal_Straight
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Fencing_Metal_Straight.png
+map_d /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Fencing_Metal_Straight.png
+
+newmtl Metal_Steel_Textured_White
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Metal_Steel_Textured_White.jpg
+
+newmtl Roofing_Shingles_GAF_Estates
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Roofing_Shingles_GAF_Estates.jpg
+
+newmtl Stone_Masonry_Multi
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Stone_Masonry_Multi.jpg
+
+newmtl Translucent_Glass_Blue
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.392157 0.584314 0.929412
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 0.498039
+illum 2
+
+newmtl Translucent_Glass_Sky_Reflection
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Translucent_Glass_Sky_Reflection.jpg
+
+newmtl Vegetation_Grass_Artificial
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Vegetation_Grass_Artificial.jpg
+
+newmtl Water_Sparkling
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (4)/model/Water_Sparkling.jpg
+
+newmtl material
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
