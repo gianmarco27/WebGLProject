@@ -1,8 +1,8 @@
 var Map = [[]];
 var detailMap=[[]];
 var decorationMap=[[]];
-var MapWidth = 30;
-var MapHeight = 30;
+var MapWidth = 50;
+var MapHeight = 50;
 var road = 1;
 var Turn = 2;
 var Tintersection = 3;

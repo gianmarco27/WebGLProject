@@ -10,8 +10,8 @@
     var relativeCameraZ = 0.2;
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
-    var cameraDelta = 0.01;
-    var speedFactor = 3;
+    var cameraDelta = 0.04;
+    var speedFactor = 3.5;
     var cameraSpeedsVector = [0.0,0.0];
     var cameraAngleSpeed = 0.0;
     var cameraElevationSpeed = 0.0;
@@ -23,6 +23,7 @@
     var modelErrorCorrection = 0.0;
     var renderRange = 10;
     var lightAngle = 90;
+    var floorIndex = 99;
 
     var shaderDir = new URL(origin) + "CityRender/shaders/";
     var baseDir = new URL(origin) + "CityRender/";
@@ -49,6 +50,7 @@
 
     var world = [[]];
     var detailWorld = [[]];
+    var floorWorld = [[]];
 
     
     var UVFileNamePropertyIndex = new Array();
@@ -109,6 +111,7 @@ function main() {
     utils.get_json(assetDir + 'buildings/house2.json', function(loadedModel){roadModel[6] = loadedModel;});
     utils.get_json(assetDir + 'buildings/building9.json', function(loadedModel){roadModel[7] = loadedModel;});
     utils.get_json(assetDir + 'street_lamp/street_lamp.json', function(loadedModel){roadModel[8] = loadedModel;});
+    utils.get_json(assetDir + 'buildings/erba.json', function(loadedModel){roadModel[floorIndex] = loadedModel;});
 
     perspectiveMatrix = utils.MakePerspective(60, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
     positionAttributeLocation = gl.getAttribLocation(program, "a_position");
@@ -130,6 +133,7 @@ function main() {
     headlightsActiveLocation = gl.getUniformLocation(program,"headlightsOn");
 
     for (let MapI = 0; MapI < MapWidth; MapI ++){
+        floorWorld[MapI] = [];
         world[MapI] = [];
         detailWorld[MapI] = [];
         for (let MapJ = 0; MapJ < MapHeight; MapJ ++){
@@ -152,19 +156,21 @@ function main() {
                     modelRx = detailMap[wrapAround(MapI)][wrapAround(MapJ)].rotation;
                 }
 
-                if(currentModel == 5){
+                if(currentDetailWorld == 5){
                     detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.087, modelRx, modelRy, modelRz, 1.0);
-                } else if (currentModel != 9){
-                    detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
+                } else if (currentDetailWorld != 9){
+                    detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.001, modelRx, modelRy, modelRz, 1.0);
                 }  
             
             world[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
+            
+            floorWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.0011, modelRx, modelRy, modelRz, 1.0);
  
             if (currentDetailWorld > 0){
                 if(currentDetailWorld == 5){
-                detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.4, modelRx, modelRy, modelRz, 1.0);
+                detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.087, modelRx, modelRy, modelRz, 1.0);
                 } else {
-                detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
+                detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.001, modelRx, modelRy, modelRz, 1.0);
                 }
             }
             
@@ -204,11 +210,27 @@ function main() {
                             }
                         }
                 }
-        }             
+        }
     }
         
+    //loading floor
+    roadVertices[floorIndex] = new Array();
+    roadIndices[floorIndex] = new Array();
+    roadTextCoords[floorIndex] = new Array();
+    roadNormals[floorIndex] = new Array();
+    for (let j=0; j<roadModel[floorIndex].meshes.length; j++){
+        roadVertices[floorIndex][j] = roadModel[floorIndex].meshes[j].vertices;
+        roadIndices[floorIndex][j] = [].concat.apply([], roadModel[floorIndex].meshes[j].faces);
+        roadNormals[floorIndex][j] = roadModel[floorIndex].meshes[j].normals;
+            if(roadModel[floorIndex].meshes[j].hasOwnProperty("texturecoords")){
+                roadTextCoords[floorIndex][j] = roadModel[floorIndex].meshes[j].texturecoords[0];
+            }
+    }
         
     for (let modelIndex = 0; modelIndex < roadVertices.length; modelIndex ++){
+        if(roadVertices[modelIndex] == null){
+            continue;
+        }
                 modelMeshMatIndex[modelIndex] = new Array();
                 UVFileNamePropertyIndex[modelIndex] = new Array();
                 diffuseColorPropertyIndex[modelIndex] = new Array();
@@ -221,7 +243,6 @@ function main() {
                     modelCentererAndScaler(roadVertices[modelIndex]);
                 }
                     
-
                 for (let meshIndex = 0; meshIndex < roadModel[modelIndex].meshes.length; meshIndex ++) {
 
                         modelMeshMatIndex[modelIndex][meshIndex] = roadModel[modelIndex].meshes[meshIndex].materialindex;
@@ -306,6 +327,7 @@ function drawScene() {
                     worldRender(MapI,MapJ);
                     currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
                     detailRender(MapI,MapJ);
+                    floorRender(MapI,MapJ);
                 }
         }
     
@@ -315,6 +337,7 @@ function drawScene() {
                     worldRender(MapI,MapJ);
                     currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
                     detailRender(MapI,MapJ);
+                    floorRender(MapI,MapJ);
                 }
             }
     
@@ -324,8 +347,9 @@ function drawScene() {
                     worldRender(MapI,MapJ);
                     currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
                     detailRender(MapI,MapJ);
+                    floorRender(MapI,MapJ);
                 }
-        }
+            }
     
          for (let MapI = Math.floor(relativeCameraVector[0]/xSize); MapI < renderRange + Math.floor(relativeCameraVector[0]/xSize); MapI++){
                 for (let MapJ = Math.floor(relativeCameraVector[1]/ySize); MapJ < renderRange + Math.floor(relativeCameraVector[1]/ySize); MapJ++){
@@ -333,6 +357,7 @@ function drawScene() {
                     worldRender(MapI,MapJ);
                     currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
                     detailRender(MapI,MapJ);
+                    floorRender(MapI,MapJ);
                 }
             }
 
@@ -422,7 +447,7 @@ function detailRender(MapI,MapJ){
                                     detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ + (ySize/2 - 0.25), 0.0, modelRx, modelRy, modelRz, 1.0);
                              } else {
                                  modelRx = 0.0;
-                                 detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI - (xSize/2 - 0.2), (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
+                                 detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI - (xSize/2 - 0.2), (ySize-modelErrorCorrection) * MapJ, -0.087, modelRx, modelRy, modelRz, 1.0);
                              }
                         
                         } else if(decorationMap[wrapAround(MapI)][wrapAround(MapJ)] > 1 &&
@@ -433,7 +458,7 @@ function detailRender(MapI,MapJ){
                         if(currentModel == 5){
                             detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.087, modelRx, modelRy, modelRz, 1.0);
                         } else if (currentModel != 9){
-                            detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
+                            detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.001, modelRx, modelRy, modelRz, 1.0);
                         }   
                    }
                 
@@ -487,6 +512,60 @@ function detailRender(MapI,MapJ){
                         gl.drawElements(gl.TRIANGLES, roadIndices[currentModel][meshIndex].length, gl.UNSIGNED_SHORT, 0);
                     }
                 }         
+}
+
+function floorRender(MapI,MapJ){
+    if((MapI >= MapWidth || MapJ >= MapHeight || MapI < 0 || MapI < 0) && floorWorld[MapI][MapJ] == null)
+                    floorWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ, -0.0011, modelRx, modelRy, modelRz, 1.0);
+        for (let meshIndex = 0; meshIndex < roadModel[floorIndex].meshes.length; meshIndex++) {                                             
+            
+            viewWorldMatrix = utils.multiplyMatrices(viewMatrix, floorWorld[MapI][MapJ]);
+            projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
+
+            gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
+            gl.uniformMatrix4fv(matrixWorldLocation,gl.FALSE, utils.transposeMatrix(floorWorld[MapI][MapJ]));
+            gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewMatrix));
+            gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewWorldMatrix));
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[floorIndex][meshIndex]), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            gl.uniform3fv(cameraPosUniformLocation, new Array(relativeCameraVector[0],relativeCameraVector[1],relativeCameraZ));                
+            gl.uniform1f(angleLocation, cameraAngle);
+
+            gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity)); 
+            gl.uniform3fv(sliderDirectionalLightDirection, new Array(directionalLightX,directionalLightY,0.0));
+
+
+            gl.uniform3fv(sliderPointLightIntensity, new Array(pointLightIntensity ,pointLightIntensity,pointLightIntensity)); 
+            gl.uniform3fv(sliderPointLightDirection, new Array(pointLightX,pointLightY,0.0));
+
+            gl.uniform1f(sliderPointLightG, pointLightG);
+            gl.uniform1f(sliderPointLightDecayFactor, pointLightDecayFactor);
+            gl.uniform1f(headlightsActiveLocation, activeHeadlights);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, texture[floorIndex][meshIndex]);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadNormals[floorIndex][meshIndex]), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(normalAttributeLocation);
+            gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadTextCoords[floorIndex][meshIndex]), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(uvAttributeLocation);
+            gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(roadIndices[floorIndex][meshIndex]), gl.STATIC_DRAW);
+            gl.uniform1i(textLocation, texture[floorIndex][meshIndex]);
+
+
+            gl.drawElements(gl.TRIANGLES, roadIndices[floorIndex][meshIndex].length, gl.UNSIGNED_SHORT, 0);     
+        }
 }
 
 function MakeHorizontalView(cx, cy, cz, elev, ang) {
@@ -637,6 +716,11 @@ function modelCentererAndScaler(model){
     if(model == roadVertices[4]){
         xRateo = (maxX-minX)/(xSize*0.5);
         zRateo = (maxZ-minZ)/(ySize*0.5);
+    }
+    if(roadVertices.indexOf(model) > 4 && roadVertices.indexOf(model)!=floorIndex){
+        xRateo = (maxX-minX)/(xSize * 0.9);
+        zRateo = (maxZ-minZ)/(ySize * 0.9);
+        yRateo = Math.min(xRateo,zRateo);
     }
     for (let i = 0; i < model.length; i++){
         for (let j = 0; j < model[i].length; j++){

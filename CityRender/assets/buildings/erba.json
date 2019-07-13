@@ -1,0 +1,447 @@
+{
+	 "rootnode": {
+		 "name": "erba.obj"
+		,"transformation": [
+			 1
+			,0
+			,0
+			,0
+			,0
+			,1
+			,0
+			,0
+			,0
+			,0
+			,1
+			,0
+			,0
+			,0
+			,0
+			,1
+		]
+		,"children": [
+			{
+				 "name": "SketchUp_ID149"
+				,"transformation": [
+					 1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+				]
+				,"meshes": [
+					 0
+				]
+			}
+			,{
+				 "name": "defaultobject"
+				,"transformation": [
+					 1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+				]
+				,"meshes": [
+					 1
+				]
+			}
+			,{
+				 "name": "instance_0.024_ID145"
+				,"transformation": [
+					 1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+				]
+			}
+			,{
+				 "name": "instance_0.023_ID141"
+				,"transformation": [
+					 1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+				]
+			}
+			,{
+				 "name": "instance_0.021_ID133"
+				,"transformation": [
+					 1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+					,0
+					,0
+					,0
+					,0
+					,1
+				]
+			}
+		]
+	}
+	,"flags": 8
+	,"meshes": [
+		{
+			 "name": ""
+			,"materialindex": 1
+			,"primitivetypes": 4
+			,"vertices": [
+				 11.475
+				,0
+				,-19.052
+				,-10.9738
+				,0
+				,14.4823
+				,-10.9738
+				,0
+				,-19.052
+				,11.475
+				,0
+				,14.4823
+			]
+			,"normals": [
+				 0
+				,-1
+				,0
+				,0
+				,-1
+				,0
+				,0
+				,-1
+				,0
+				,0
+				,-1
+				,0
+			]
+			,"faces": [
+				[
+					 0
+					,1
+					,2
+				]
+				,[
+					 1
+					,0
+					,3
+				]
+			]
+		}
+		,{
+			 "name": ""
+			,"materialindex": 0
+			,"primitivetypes": 4
+			,"vertices": [
+				 11.475
+				,0
+				,14.4823
+				,11.475
+				,0
+				,-19.052
+				,-10.9738
+				,0
+				,14.4823
+				,-10.9738
+				,0
+				,-19.052
+			]
+			,"normals": [
+				 0
+				,1
+				,0
+				,0
+				,1
+				,0
+				,0
+				,1
+				,0
+				,0
+				,1
+				,0
+			]
+			,"tangents": [
+				 -1
+				,0
+				,0
+				,-1
+				,0
+				,0
+				,-1
+				,0
+				,0
+				,-1
+				,0
+				,0
+			]
+			,"bitangents": [
+				 0
+				,0
+				,1
+				,0
+				,0
+				,1
+				,0
+				,0
+				,1
+				,0
+				,0
+				,1
+			]
+			,"numuvcomponents": [
+				 2
+			]
+			,"texturecoords": [
+				[
+					 -43.4957
+					,4.47196
+					,-43.4957
+					,59.4824
+					,-6.67015
+					,4.47196
+					,-6.67015
+					,59.4824
+				]
+			]
+			,"faces": [
+				[
+					 0
+					,1
+					,2
+				]
+				,[
+					 3
+					,2
+					,1
+				]
+			]
+		}
+	]
+	,"materials": [
+		{
+			 "properties": [
+				{
+					 "key": "?mat.name"
+					,"semantic": 0
+					,"index": 0
+					,"type": 3
+					,"value": "Vegetation_Grass1"
+				}
+				,{
+					 "key": "$mat.shadingm"
+					,"semantic": 0
+					,"index": 0
+					,"type": 4
+					,"value": 3
+				}
+				,{
+					 "key": "$clr.ambient"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 1
+						,1
+						,1
+					]
+				}
+				,{
+					 "key": "$clr.diffuse"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 0.64
+						,0.64
+						,0.64
+					]
+				}
+				,{
+					 "key": "$clr.specular"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 0.5
+						,0.5
+						,0.5
+					]
+				}
+				,{
+					 "key": "$clr.emissive"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 0
+						,0
+						,0
+					]
+				}
+				,{
+					 "key": "$mat.shininess"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": 384.314
+				}
+				,{
+					 "key": "$mat.opacity"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": 1
+				}
+				,{
+					 "key": "$mat.refracti"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": -1
+				}
+				,{
+					 "key": "$tex.file"
+					,"semantic": 1
+					,"index": 0
+					,"type": 3
+					,"value": "/model/Vegetation_Grass1.jpg"
+				}
+			]
+		}
+		,{
+			 "properties": [
+				{
+					 "key": "?mat.name"
+					,"semantic": 0
+					,"index": 0
+					,"type": 3
+					,"value": "material"
+				}
+				,{
+					 "key": "$mat.shadingm"
+					,"semantic": 0
+					,"index": 0
+					,"type": 4
+					,"value": 3
+				}
+				,{
+					 "key": "$clr.ambient"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 1
+						,1
+						,1
+					]
+				}
+				,{
+					 "key": "$clr.diffuse"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 1
+						,1
+						,1
+					]
+				}
+				,{
+					 "key": "$clr.specular"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 0.5
+						,0.5
+						,0.5
+					]
+				}
+				,{
+					 "key": "$clr.emissive"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": [
+						 0
+						,0
+						,0
+					]
+				}
+				,{
+					 "key": "$mat.shininess"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": 384.314
+				}
+				,{
+					 "key": "$mat.opacity"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": 1
+				}
+				,{
+					 "key": "$mat.refracti"
+					,"semantic": 0
+					,"index": 0
+					,"type": 1
+					,"value": -1
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,270 @@
+{
+  "rootnode": {
+    "name": "floor.obj",
+    "transformation": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "flags": 8,
+  "meshes": [
+    {
+      "name": "",
+      "materialindex": 0,
+      "primitivetypes": 4,
+      "vertices": [
+        -1.15,
+        0,
+        -1.15,
+        1.15,
+        0,
+        -1.15,
+        -1.15,
+        0,
+        1.15,
+        1.15,
+        0,
+        -1.15
+      ],
+      "normals": [
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      "tangents": [
+        -0.752383,
+        0,
+        -0.658726,
+        -0.752383,
+        0,
+        -0.658726,
+        -0.752383,
+        0,
+        -0.658726,
+        0.752383,
+        0,
+        0.658726,
+        0.752383,
+        0,
+        0.658726,
+        0.752383,
+        0,
+        0.658726,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "bitangents": [
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "numuvcomponents": [
+        2
+      ],
+      "texturecoords": [
+        [
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          2,
+          3
+        ]
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "properties": [
+        {
+          "key": "?mat.name",
+          "semantic": 0,
+          "index": 0,
+          "type": 3,
+          "value": "Vegetation_Grass1"
+        },
+        {
+          "key": "$mat.shadingm",
+          "semantic": 0,
+          "index": 0,
+          "type": 4,
+          "value": 3
+        },
+        {
+          "key": "$clr.ambient",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "key": "$clr.diffuse",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": [
+            0.64,
+            0.64,
+            0.64
+          ]
+        },
+        {
+          "key": "$clr.specular",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "key": "$clr.emissive",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "key": "$mat.shininess",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": 368.627
+        },
+        {
+          "key": "$mat.opacity",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": 1
+        },
+        {
+          "key": "$mat.refracti",
+          "semantic": 0,
+          "index": 0,
+          "type": 1,
+          "value": 1
+        },
+        {
+          "key": "$tex.file",
+          "semantic": 1,
+          "index": 0,
+          "type": 3,
+          "value": "model\\Vegetation_Grass1.jpg"
+        }
+      ]
+    }
+  ]
+}
