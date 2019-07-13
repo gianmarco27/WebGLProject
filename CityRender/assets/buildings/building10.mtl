@@ -1,0 +1,55 @@
+# Blender MTL File: 'None'
+# Material Count: 5
+
+newmtl Cladding_Stucco_White
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (1)/model/Cladding_Stucco_White.jpg
+
+newmtl Color_005
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.447059 0.447059 0.447059
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+
+newmtl Translucent_Glass_Tinted
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (1)/model/Translucent_Glass_Tinted.jpg
+
+newmtl Wood_Cherry_Original
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (1)/model/Wood_Cherry_Original.jpg
+
+newmtl material
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2

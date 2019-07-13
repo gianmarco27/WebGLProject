@@ -1,0 +1,56 @@
+# Blender MTL File: 'None'
+# Material Count: 5
+
+newmtl Blinds_Wood_White
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (2)/model/Blinds_Wood_White.jpg
+
+newmtl Cladding_Stucco_White
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (2)/model/Cladding_Stucco_White.jpg
+
+newmtl Water_Pool_Light
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (2)/model/Water_Pool_Light.jpg
+
+newmtl Wood_Cherry_Original
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Maurizio/Desktop/ddd/Untitled (2)/model/Wood_Cherry_Original.jpg
+
+newmtl material
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2

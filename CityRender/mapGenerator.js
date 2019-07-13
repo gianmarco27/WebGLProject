@@ -1,5 +1,6 @@
 var Map = [[]];
 var detailMap=[[]];
+var decorationMap=[[]];
 var MapWidth = 30;
 var MapHeight = 30;
 var road = 1;
@@ -32,7 +33,10 @@ function getDistance( x1, y1, x2, y2 ) {
 	return Math.sqrt( xs + ys );
 };
 
+
 function wrapAround(size,offset){
+    if(offset == null)
+        return (MapWidth + size) % MapWidth;
     return (MapWidth + size + offset) % MapWidth;
 }
 
@@ -189,6 +193,9 @@ function crossingCorrection(){
 }
 
 function curveCorrection(){
+    Map[MapWidth/2][0] = getStreetsAround(MapWidth/2,0);
+    Map[MapWidth/2][MapHeight-1] = getStreetsAround(MapWidth/2,MapHeight-1);
+
     for(let i = 0; i < MapWidth; i++){
         for(let j = 0; j < MapHeight; j++){
             if(Map[i][j] == 2)
@@ -197,9 +204,43 @@ function curveCorrection(){
                         Map[i][j] = 1;
         }
     }
-    Map[MapWidth/2][0] = getStreetsAround(MapWidth/2,0);
-    Map[MapWidth/2][MapHeight-1] = getStreetsAround(MapWidth/2,MapHeight-1);
 }
+
+function decorationFiller(){
+    let crossing = 0;
+    for(let i = 0; i < MapWidth; i++){
+        decorationMap[i] = [];
+        for(let j = 0; j < MapHeight; j++)
+            decorationMap[i][j] = 0;
+        for(let j = 0; j < MapHeight; j++){
+            if(Map[i][j] == 1){
+                if(crossing == 1){
+                    decorationMap[i][j] = 5;
+                }
+                if(crossing < 2){
+                    crossing++;
+                } else {
+                    crossing = 0;
+                    decorationMap[i][j] = 9;
+                }
+            }
+            if(Map[i][j] == 0 && (getStreetsAround(i,j) > 0 ||
+                  Map[wrapAround(i,-1)][wrapAround(j,-1)] > 0 || Map[wrapAround(i,-1)][wrapAround(j,+1)] > 0 ||
+                  Map[wrapAround(i,+1)][wrapAround(j,-1)] > 0 || Map[wrapAround(i,+1)][wrapAround(j,+1)] > 0)){
+                        decorationMap[i][j] = getRandomInt(6,8);
+                        if(Map[wrapAround(i,-1)][j] == 0)
+                            detailMap[i][j].rotation = 90.0;
+                        if(Map[wrapAround(i,+1)][j] == 0)
+                            detailMap[i][j].rotation = -90.0;
+                        if(Map[i][wrapAround(j,-1)] == 0)
+                            detailMap[i][j].rotation = 0.0;
+                        if(Map[i][wrapAround(j,+1)] == 0)
+                            detailMap[i][j].rotation = 180.0;
+            }
+        }
+    }
+}
+
 
 createPath([MapWidth/2,0],[MapWidth/2,MapHeight-1],"S");
 
@@ -207,6 +248,7 @@ createPath([MapWidth/2,0],[MapWidth/2,MapHeight-1],"S");
 
 crossingCorrection();
 curveCorrection();
+decorationFiller();
 console.log(JSON.stringify(Map));
 
 //optional enriching path, might cause unpleasant crossings
