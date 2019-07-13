@@ -12,17 +12,17 @@ uniform float angle; // rotation angle of camera
 uniform sampler2D u_texture;
 uniform vec3 DirectionalLightIntensity; // value from slider
 uniform vec3 DirectionalLightDirection; // value from slider
-uniform vec3 PointLightIntensity;
-uniform vec3 PointLightDirection;
 uniform float PointLightG;
 uniform float PointLightDecayFactor;
 uniform float headlightsOn;
+uniform mat4 streetLightX;
+uniform mat4 streetLightY;
+uniform mat4 lightsIntensity;
 
 
 vec4 lightColor = vec4(0.3f,0.3f,0.3f,1.0); //directional light
-vec4 lightColorP = vec4(1.0f,0.0f,0.0f,1.0); //point light
-vec4 lightColorS = vec4(1.0f,1.0f,0.0f,1.0); //spotlight1
-vec4 lightColorS2 = vec4(1.0f,1.0f,0.0f,1.0); //spotlight2
+vec4 lightColorP = vec4(1.0f,0.8f,0.5f,1.0); //point light
+vec4 lightColorS = vec4(0.7f,0.7f,0.3f,1.0); //spotlight
 
 
 vec4 ambientLightColor= vec4(0.34f,0.34f,0.34f,1.0); //used only to calculate the ambient contribute 
@@ -51,7 +51,12 @@ struct PointLight {
    float LDecay;
    vec4 col;
    float g;
-}pointLight; 
+};
+
+PointLight p[16];
+float px[16];
+float py[16];
+float lI[16];
 
 
 struct SpotLight{
@@ -68,13 +73,42 @@ struct SpotLight{
 
 
 void main() {
+    
+//Lights
+
+    int k=0;
+    vec4 streetLightCol;
+    vec3 streetLightDir;
+    
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            px[k] = streetLightX[i][j];
+            py[k] = streetLightY[i][j];
+            lI[k] = lightsIntensity[i][j];
+            k++;
+        }
+    }
+
+ //Initialize point light
+
+for(int i=0;i<16;i++){
+    p[i].LPos = vec3(px[i],py[i],1.0);
+    p[i].g = PointLightG;
+    p[i].LDecay = PointLightDecayFactor;
+    
+    p[i].dir = normalize(p[i].LPos - fs_pos);
+    p[i].col = lightColorP * pow(p[i].g / length(p[i].LPos - fs_pos), p[i].LDecay) * lI[i];
+    streetLightDir += p[i].dir;
+    streetLightCol += p[i].col;
+    
+}
+
+
+    
 
     lightColor = vec4(DirectionalLightIntensity.x, DirectionalLightIntensity.y, DirectionalLightIntensity.z-0.05,1.0);
-    lightColorP = vec4(PointLightIntensity.x,PointLightIntensity.y,PointLightIntensity.z - 0.05,1.0);
  
     vec3 normalVec = normalize(fs_norm);
-
-//Lights
     
     //Initialize direct light
     vec3 LDir = vec3(0.0,0.0,1.0); //direction directional light
@@ -85,23 +119,14 @@ void main() {
     directLight.dir = LDir;
     directLight.col = lightColor;
     
-
- //Initialize point light
-    pointLight.LPos = vec3(PointLightDirection.x,PointLightDirection.y,0.0);
-    pointLight.g = PointLightG;
-    pointLight.LDecay = PointLightDecayFactor;
-    
-    pointLight.dir = normalize(pointLight.LPos - fs_pos);
-    pointLight.col = lightColorP * pow(pointLight.g / length(pointLight.LPos - fs_pos), pointLight.LDecay);
-
     
 //Setup distance spotlights    
-    float offsetL = 20.0; // angular semidistance between the two spotlights
-    float R = 0.5;
+    float offsetL = 30.0; // angular semidistance between the two spotlights
+    float R = 0.28;
     
 //Initialize spotlight 1
     spotLight1.LConeOut = 25.0;
-    spotLight1.LConeIn = 20.0 ;
+    spotLight1.LConeIn = 5.0 ;
 
     vec3 LDirSpot = vec3(0.0,0.0,1.0);
 
@@ -122,7 +147,7 @@ void main() {
                                       
 //Initialize spotlight 2
     spotLight2.LConeOut = 25.0;
-    spotLight2.LConeIn = 20.0 ;
+    spotLight2.LConeIn = 5.0 ;
     vec3 LDirSpot2 = vec3(0.0,0.0,1.0);
     spotLight2.LPos = vec3(float(R * sin(radians(angle-offsetL))),float(R * cos(radians(angle-offsetL))),1.0);
     
@@ -144,8 +169,8 @@ void main() {
                         
                         
 // Final components                    
-    vec3 lightDir = directLight.dir + pointLight.dir + spotLight1.dir * headlightsOn + spotLight2.dir * headlightsOn;
-    vec4 lightCol = directLight.col + pointLight.col + spotLight1.col *headlightsOn + spotLight2.col * headlightsOn;
+    vec3 lightDir = directLight.dir + spotLight1.dir * headlightsOn + spotLight2.dir * headlightsOn + streetLightDir;
+    vec4 lightCol = directLight.col + spotLight1.col * headlightsOn + spotLight2.col * headlightsOn + streetLightCol;
 //Texture color
     vec4 texColor = texture(u_texture, uvFS);
     if(texColor.a < 0.5)  // cut to 0.5 considering objects are only visible (1.0) or invisible (0.0) 

@@ -27,26 +27,20 @@
     <canvas id="c" width="100" height="150" style="width: 1600px; height: 900px; margin: auto"></canvas>
         <div class="slidecontainer">
             <label style="display: inline-block" for="DirectionalLightIntensity">  Directional Light: Intensity </label>
-            <input type="range" min="0" max="1.0" value="0.5" class="slider" id="DirectionalLightIntensity" step="0.01">
+            <input type="range" min="0" max="1.0" value="0.15" class="slider" id="DirectionalLightIntensity" step="0.01">
             <div style="display: inline-block"> X pos </div>
             <input type="range" min="-40" max="40" value="0" class="slider" id="DirectionalLightX" step = "0.1">
             <div style="display: inline-block"> Y pos </div>
             <input type="range" min="-20" max="20" value="0" class="slider" id="DirectionalLightY" step = "0.1">
             <div class="slidecontainer">
-                <div style="display: inline-block">  Point Light: Intensity </div>
-                <input type="range" min="0" max="1.0" value="0.5" class="slider" id="PointLightIntensity" step="0.01">
-                <div style="display: inline-block"> X pos </div>
-                <input type="range" min="20" max="60" value="40" class="slider" id="PointLightX" step = "0.1">
-                <div style="display: inline-block"> Y pos </div>
-                <input type="range" min="-20" max="20" value="0" class="slider" id="PointLightY" step = "0.1">
-                 <div style="display: inline-block"> g </div>
-                <input type="range" min="0" max="10" value="1.0" class="slider" id="PointLightG" step = "0.1">
-                 <div style="display: inline-block"> DecayFactor: 0 </div>
-                <input type="range" min="0" max="2" value="1" class="slider" id="PointLightDecayFactor" step = "1.0">
-                <div style="display: inline-block">2</div>
+                 <div style="display: inline-block">Street Light g</div>
+                <input type="range" min="0" max="3" value="0.5" class="slider" id="PointLightG" step = "0.1">
+                 <div style="display: inline-block">DecayFactor: 0 </div>
+                <input type="range" min="0" max="3" value="3" class="slider" id="PointLightDecayFactor" step = "1.0">
+                <div style="display: inline-block">3</div>
                 <div class="slidecontainer">
                     <div style="display: inline-block"> Headlights: OFF </div>
-                    <input type="range" min="0.0" max="1.0" value="1" class="slider" id="SpotlightsActive" step = "1.0">
+                    <input type="range" min="0.0" max="1.0" value="0" class="slider" id="SpotlightsActive" step = "1.0">
                     <div style="display: inline-block">ON</div>
                 </div>
             </div>
