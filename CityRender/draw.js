@@ -316,8 +316,8 @@ function drawScene() {
         
 
         utils.resizeCanvasToDisplaySize(gl.canvas);
-        gl.clearColor(0.85, 0.85, 0.85, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clearColor(0.24, 0.87, 1.66, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.ACCUM_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
 
 
