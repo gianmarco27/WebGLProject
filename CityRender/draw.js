@@ -10,8 +10,8 @@
     var relativeCameraZ = 0.2;
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
-    var cameraDelta = 0.04;
-    var speedFactor = 3.5;
+    var cameraDelta = 0.03;
+    var speedFactor = 2.0;
     var cameraSpeedsVector = [0.0,0.0];
     var cameraAngleSpeed = 0.0;
     var cameraElevationSpeed = 0.0;
@@ -70,7 +70,11 @@
     var matrixViewWorldLocation;
     var currentModel;
 
+    var lightXPositionMatrix = [];
+    var lightYPositionMatrix = [];
+    var IntensityMatrix = [];
 
+   
 function main() {
     
     relativeCameraVector = [(MapWidth/2)*(xSize-modelErrorCorrection),(MapWidth*4)*(ySize-modelErrorCorrection)];
@@ -126,11 +130,12 @@ function main() {
     matrixWorldLocation = gl.getUniformLocation(program,"world");
     sliderDirectionalLightIntensity = gl.getUniformLocation(program,"DirectionalLightIntensity");
     sliderDirectionalLightDirection = gl.getUniformLocation(program,"DirectionalLightDirection");
-    sliderPointLightIntensity = gl.getUniformLocation(program,"PointLightIntensity");
-    sliderPointLightDirection= gl.getUniformLocation(program,"PointLightDirection");
     sliderPointLightG = gl.getUniformLocation(program,"PointLightG");
     sliderPointLightDecayFactor = gl.getUniformLocation(program,"PointLightDecayFactor");
     headlightsActiveLocation = gl.getUniformLocation(program,"headlightsOn");
+    lightBufferXLocation = gl.getUniformLocation(program,"streetLightX");
+    lightBufferYLocation = gl.getUniformLocation(program,"streetLightY");
+    lightBufferIntensity = gl.getUniformLocation(program,"lightsIntensity");
 
     for (let MapI = 0; MapI < MapWidth; MapI ++){
         floorWorld[MapI] = [];
@@ -145,10 +150,10 @@ function main() {
                      if(detailMap[wrapAround(MapI)][wrapAround(MapJ)].direction == "E" ||
                         detailMap[wrapAround(MapI)][wrapAround(MapJ)].direction == "W"){
                             modelRx = 90.0;
-                            detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ + (ySize/2 - 0.25), 0.0, modelRx, modelRy, modelRz, 1.0);
+                            detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ + (ySize/2 - 0.8), 0.0, modelRx, modelRy, modelRz, 1.0);
                      } else {
                          modelRx = 0.0;
-                         detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI - (xSize/2 - 0.2), (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
+                         detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI - (xSize/2 - 0.8), (ySize-modelErrorCorrection) * MapJ, 0.0, modelRx, modelRy, modelRz, 1.0);
                      }
 
                 } else if(decorationMap[wrapAround(MapI)][wrapAround(MapJ)] > 1 &&
@@ -239,7 +244,7 @@ function main() {
                 texture[modelIndex] = new Array();
                 image[modelIndex] = new Array();
 
-                if(roadVertices[modelIndex]!=null && modelIndex!=8){
+                if(roadVertices[modelIndex]!=null){
                     modelCentererAndScaler(roadVertices[modelIndex]);
                 }
                     
@@ -285,7 +290,7 @@ function main() {
 
                 }
             }
-
+    
     initInteraction();
     drawScene();
     }
@@ -297,9 +302,7 @@ function drawScene() {
         directionalLightX = document.getElementById("DirectionalLightX").value;
         directionalLightY = document.getElementById("DirectionalLightY").value;
         activeHeadlights  = document.getElementById("SpotlightsActive").value;
-        pointLightIntensity = document.getElementById("PointLightIntensity").value
-        pointLightX = document.getElementById("PointLightX").value;
-        pointLightY = document.getElementById("PointLightY").value;
+        
         pointLightG = document.getElementById("PointLightG").value;
         pointLightDecayFactor = document.getElementById("PointLightDecayFactor").value;
     
@@ -316,13 +319,34 @@ function drawScene() {
         
 
         utils.resizeCanvasToDisplaySize(gl.canvas);
-        gl.clearColor(0.24, 0.87, 1.66, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.ACCUM_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+        gl.clearColor(0.24*directionalLightIntensity, 0.87*directionalLightIntensity, 1.66*directionalLightIntensity, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.ACCUM_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
 
-
-        for (let MapI = Math.floor(relativeCameraVector[0]/xSize); MapI > Math.floor(relativeCameraVector[0]/xSize) - renderRange; MapI--){
-            for (let MapJ = Math.floor(relativeCameraVector[1]/ySize); MapJ > Math.floor(relativeCameraVector[1]/ySize) - renderRange; MapJ--){
+        let xIndexCounter = 0;
+    
+        for(let i = 0; i < 16; i++){
+            lightXPositionMatrix[i] = 0;
+            lightYPositionMatrix[i] = 0;
+            IntensityMatrix[i] = 0;
+        }
+    
+        let scaledPositionX = Math.floor(relativeCameraVector[0]/xSize);
+        let scaledPositionY = Math.floor(relativeCameraVector[1]/ySize);
+        
+        for (let MapI = scaledPositionX - renderRange; MapI < scaledPositionX + renderRange; MapI++){
+            for (let MapJ = scaledPositionY - renderRange; MapJ < scaledPositionY + renderRange; MapJ++){
+                    if(decorationMap[wrapAround(MapI)][wrapAround(MapJ)] == 9 && xIndexCounter < 16){
+                        lightXPositionMatrix[xIndexCounter] = MapI * xSize;
+                        lightYPositionMatrix[xIndexCounter] = MapJ * xSize;
+                        IntensityMatrix[xIndexCounter] = 1;
+                        xIndexCounter++;
+                    }
+                }
+            }
+    
+        for (let MapI = scaledPositionX - renderRange; MapI < scaledPositionX + renderRange; MapI++){
+            for (let MapJ = scaledPositionY - renderRange; MapJ < scaledPositionY + renderRange; MapJ++){
                     currentModel = Map[wrapAround(MapI)][wrapAround(MapJ)];
                     worldRender(MapI,MapJ);
                     currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
@@ -330,37 +354,6 @@ function drawScene() {
                     floorRender(MapI,MapJ);
                 }
         }
-    
-        for (let MapI = Math.floor(relativeCameraVector[0]/xSize); MapI > Math.floor(relativeCameraVector[0]/xSize) - renderRange; MapI--){
-                for (let MapJ = Math.floor(relativeCameraVector[1]/ySize); MapJ < Math.floor(relativeCameraVector[1]/ySize) + renderRange; MapJ++){
-                    currentModel = Map[wrapAround(MapI)][wrapAround(MapJ)];
-                    worldRender(MapI,MapJ);
-                    currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
-                    detailRender(MapI,MapJ);
-                    floorRender(MapI,MapJ);
-                }
-            }
-    
-        for (let MapI = Math.floor(relativeCameraVector[0]/xSize); MapI < renderRange + Math.floor(relativeCameraVector[0]/xSize); MapI++){
-            for (let MapJ = Math.floor(relativeCameraVector[1]/ySize); MapJ > Math.floor(relativeCameraVector[1]/ySize) - renderRange; MapJ--){
-                    currentModel = Map[wrapAround(MapI)][wrapAround(MapJ)];
-                    worldRender(MapI,MapJ);
-                    currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
-                    detailRender(MapI,MapJ);
-                    floorRender(MapI,MapJ);
-                }
-            }
-    
-         for (let MapI = Math.floor(relativeCameraVector[0]/xSize); MapI < renderRange + Math.floor(relativeCameraVector[0]/xSize); MapI++){
-                for (let MapJ = Math.floor(relativeCameraVector[1]/ySize); MapJ < renderRange + Math.floor(relativeCameraVector[1]/ySize); MapJ++){
-                    currentModel = Map[wrapAround(MapI)][wrapAround(MapJ)];
-                    worldRender(MapI,MapJ);
-                    currentModel = decorationMap[wrapAround(MapI)][wrapAround(MapJ)];
-                    detailRender(MapI,MapJ);
-                    floorRender(MapI,MapJ);
-                }
-            }
-
     window.requestAnimationFrame(drawScene);
 }
 
@@ -388,7 +381,10 @@ function worldRender(MapI,MapJ){
                         gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
                         gl.uniformMatrix4fv(matrixWorldLocation,gl.FALSE, utils.transposeMatrix(world[MapI][MapJ]));
                         gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewMatrix));
-                        gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewWorldMatrix));
+                        
+                        gl.uniformMatrix4fv(lightBufferXLocation, gl.FALSE, lightXPositionMatrix);
+                        gl.uniformMatrix4fv(lightBufferYLocation, gl.FALSE, lightYPositionMatrix);
+                        gl.uniformMatrix4fv(lightBufferIntensity, gl.FALSE, IntensityMatrix);
 
                         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
                         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[currentModel][meshIndex]), gl.STATIC_DRAW);
@@ -401,10 +397,7 @@ function worldRender(MapI,MapJ){
                         gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity)); 
                         gl.uniform3fv(sliderDirectionalLightDirection, new Array(directionalLightX,directionalLightY,0.0));
                         
-                        
-                        gl.uniform3fv(sliderPointLightIntensity, new Array(pointLightIntensity ,pointLightIntensity,pointLightIntensity)); 
-                        gl.uniform3fv(sliderPointLightDirection, new Array(pointLightX,pointLightY,0.0));
-                        
+                                            
                         gl.uniform1f(sliderPointLightG, pointLightG);
                         gl.uniform1f(sliderPointLightDecayFactor, pointLightDecayFactor);
                         gl.uniform1f(headlightsActiveLocation, activeHeadlights);
@@ -444,10 +437,10 @@ function detailRender(MapI,MapJ){
                              if(detailMap[wrapAround(MapI)][wrapAround(MapJ)].direction == "E" ||
                                 detailMap[wrapAround(MapI)][wrapAround(MapJ)].direction == "W"){
                                     modelRx = 90.0;
-                                    detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ + (ySize/2 - 0.25), 0.0, modelRx, modelRy, modelRz, 1.0);
+                                    detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI, (ySize-modelErrorCorrection) * MapJ + (ySize/2 - 0.88), 0.0, modelRx, modelRy, modelRz, 1.0);
                              } else {
                                  modelRx = 0.0;
-                                 detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI - (xSize/2 - 0.2), (ySize-modelErrorCorrection) * MapJ, -0.087, modelRx, modelRy, modelRz, 1.0);
+                                 detailWorld[MapI][MapJ] = utils.MakeWorld((xSize-modelErrorCorrection) * MapI - (xSize/2 - 0.8), (ySize-modelErrorCorrection) * MapJ, -0.087, modelRx, modelRy, modelRz, 1.0);
                              }
                         
                         } else if(decorationMap[wrapAround(MapI)][wrapAround(MapJ)] > 1 &&
@@ -472,6 +465,11 @@ function detailRender(MapI,MapJ){
                         gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewMatrix));
                         gl.uniformMatrix4fv(matrixViewWorldLocation, gl.FALSE, utils.transposeMatrix(viewWorldMatrix));
 
+                        
+                        gl.uniformMatrix4fv(lightBufferXLocation, gl.FALSE, lightXPositionMatrix);
+                        gl.uniformMatrix4fv(lightBufferYLocation, gl.FALSE, lightYPositionMatrix);
+                        gl.uniformMatrix4fv(lightBufferIntensity, gl.FALSE, IntensityMatrix);
+                        
                         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
                         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(roadVertices[currentModel][meshIndex]), gl.STATIC_DRAW);
                         gl.enableVertexAttribArray(positionAttributeLocation);
@@ -483,10 +481,7 @@ function detailRender(MapI,MapJ){
                         gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity)); 
                         gl.uniform3fv(sliderDirectionalLightDirection, new Array(directionalLightX,directionalLightY,0.0));
                         
-                        
-                        gl.uniform3fv(sliderPointLightIntensity, new Array(pointLightIntensity ,pointLightIntensity,pointLightIntensity)); 
-                        gl.uniform3fv(sliderPointLightDirection, new Array(pointLightX,pointLightY,0.0));
-                        
+                                            
                         gl.uniform1f(sliderPointLightG, pointLightG);
                         gl.uniform1f(sliderPointLightDecayFactor, pointLightDecayFactor);
                         gl.uniform1f(headlightsActiveLocation, activeHeadlights);
@@ -537,10 +532,6 @@ function floorRender(MapI,MapJ){
 
             gl.uniform3fv(sliderDirectionalLightIntensity, new Array(directionalLightIntensity,directionalLightIntensity,directionalLightIntensity)); 
             gl.uniform3fv(sliderDirectionalLightDirection, new Array(directionalLightX,directionalLightY,0.0));
-
-
-            gl.uniform3fv(sliderPointLightIntensity, new Array(pointLightIntensity ,pointLightIntensity,pointLightIntensity)); 
-            gl.uniform3fv(sliderPointLightDirection, new Array(pointLightX,pointLightY,0.0));
 
             gl.uniform1f(sliderPointLightG, pointLightG);
             gl.uniform1f(sliderPointLightDecayFactor, pointLightDecayFactor);
@@ -717,10 +708,16 @@ function modelCentererAndScaler(model){
         xRateo = (maxX-minX)/(xSize*0.5);
         zRateo = (maxZ-minZ)/(ySize*0.5);
     }
-    if(roadVertices.indexOf(model) > 4 && roadVertices.indexOf(model)!=floorIndex){
+    if(roadVertices.indexOf(model) > 4 && model!=roadVertices[floorIndex] && model != roadVertices[8]){
         xRateo = (maxX-minX)/(xSize * 0.9);
         zRateo = (maxZ-minZ)/(ySize * 0.9);
         yRateo = Math.min(xRateo,zRateo);
+    }
+    
+    if(model == roadVertices[8]){
+        xRateo = 1;
+        zRateo = 1;
+        yRateo = 1;
     }
     for (let i = 0; i < model.length; i++){
         for (let j = 0; j < model[i].length; j++){
