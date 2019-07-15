@@ -18,7 +18,7 @@ uniform mat4 viewWorld;
 void main() {
 
   uvFS = a_uv;
-  fs_norm = vec3(transpose(inverse(world)) * vec4(a_normal,1.0)); 
+  fs_norm = mat3(transpose(inverse(world))) * a_normal ; 
   fs_pos = vec3(world * vec4(a_position, 1.0));
   gl_Position = matrix * vec4(a_position,1.0);
 
