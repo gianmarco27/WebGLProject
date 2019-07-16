@@ -10,7 +10,7 @@
     var relativeCameraZ = 0.2;
     var cameraElevation = 90.0;
     var cameraAngle = 0.0;
-    var cameraDelta = 0.03;
+    var cameraDelta = 0.02;
     var speedFactor = 2.0;
     var cameraSpeedsVector = [0.0,0.0];
     var cameraAngleSpeed = 0.0;
@@ -21,7 +21,7 @@
     var mapXrep = 0;
     var mapYrep = 0;
     var modelErrorCorrection = 0.0;
-    var renderRange = 10;
+    var renderRange = 4;
     var lightAngle = 90;
     var floorIndex = 99;
 
@@ -558,6 +558,7 @@ function floorRender(MapI,MapJ){
             gl.drawElements(gl.TRIANGLES, roadIndices[floorIndex][meshIndex].length, gl.UNSIGNED_SHORT, 0);     
         }
 }
+
 
 function MakeHorizontalView(cx, cy, cz, elev, ang) {
 	// Creates in {out} a view matrix. The camera is centerd in ({cx}, {cy}, {cz}).
